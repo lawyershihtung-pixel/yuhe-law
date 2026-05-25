@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>禹河法律事務所</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #1c1c1e;
+      --slate:   #3a3a4a;
+      --mid:     #6b6b7b;
+      --mist:    #f5f4f0;
+      --cream:   #faf9f6;
+      --gold:    #b89d6e;
+      --gold-lt: #d4bc92;
+      --white:   #ffffff;
+      --border:  rgba(184,157,110,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5vw;
+      height: 68px;
+      background: rgba(250,249,246,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: box-shadow .3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 32px rgba(28,28,30,0.08); }
+
+    .nav-logo {
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 500;
+      font-size: 1.05rem;
+      letter-spacing: .12em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+
+    .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+    .nav-links a {
+      font-size: .8rem; letter-spacing: .1em;
+      color: var(--slate); text-decoration: none;
+      transition: color .2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1px; background: var(--gold);
+      transform: scaleX(0); transition: transform .25s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    .nav-cta {
+      font-size: .8rem; letter-spacing: .1em;
+      padding: .5rem 1.3rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-decoration: none;
+      transition: background .2s, color .2s;
+    }
+    .nav-cta:hover { background: var(--gold); color: var(--white); }
+
+
+    /* ── HAMBURGER ── */
+    .hamburger {
+      display: flex; flex-direction: column; justify-content: center;
+      gap: 5px; width: 2rem; height: 2rem;
+      cursor: pointer; background: none; border: none;
+      padding: 0; flex-shrink: 0;
+    }
+    .hamburger span {
+      display: block; width: 100%; height: 1.5px;
+      background: var(--ink);
+      transition: transform .3s ease, opacity .25s ease;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── DROPDOWN MENU ── */
+    .dropdown {
+      position: absolute;
+      top: 68px; left: 0; right: 0;
+      background: var(--white);
+      border-top: 2px solid var(--gold);
+      box-shadow: 0 12px 40px rgba(28,28,30,.13);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s cubic-bezier(.4,0,.2,1);
+      z-index: 99;
+    }
+    .dropdown.open { max-height: 100vh; }
+
+    .dropdown-inner {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dd-item { border-right: 1px solid var(--border); }
+    .dd-item:last-child { border-right: none; }
+
+    .dd-main {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.1rem 1.6rem;
+      font-family: 'Noto Serif TC', serif;
+      font-size: .95rem; letter-spacing: .08em;
+      color: var(--slate); text-decoration: none;
+      background: none; border: none; cursor: pointer;
+      width: 100%; text-align: left;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s, background .2s;
+    }
+    .dd-main:hover { color: var(--gold); background: var(--mist); border-bottom-color: var(--gold); }
+    .dd-main.has-sub { padding-right: 1rem; }
+
+    .dd-arrow {
+      font-size: .65rem; color: var(--mid);
+      transition: transform .3s, color .3s;
+      flex-shrink: 0; margin-left: .5rem;
+    }
+    .dd-item.expanded .dd-arrow { transform: rotate(180deg); color: var(--gold); }
+
+    .dd-sub {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease;
+      background: var(--mist);
+      border-top: 1px solid var(--border);
+    }
+    .dd-item.expanded .dd-sub { max-height: 400px; }
+
+    .dd-sub a {
+      display: block; padding: .75rem 1.6rem .75rem 2rem;
+      font-size: .82rem; letter-spacing: .07em;
+      color: var(--mid); text-decoration: none;
+      border-bottom: 1px solid rgba(184,157,110,.1);
+      transition: color .2s, background .2s, padding-left .2s;
+    }
+    .dd-sub a:last-child { border-bottom: none; }
+    .dd-sub a::before { content: "—　"; color: var(--gold-lt); font-size: .7rem; }
+    .dd-sub a:hover { color: var(--gold); background: rgba(184,157,110,.07); padding-left: 2.3rem; }
+
+    .dd-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.6rem;
+      background: var(--ink);
+    }
+    .dd-footer-text {
+      font-size: .75rem; letter-spacing: .1em;
+      color: rgba(255,255,255,.5);
+    }
+    .dd-footer-call {
+      display: flex; align-items: center; gap: .6rem;
+      text-decoration: none; color: var(--white);
+      font-size: .82rem; letter-spacing: .1em;
+      background: var(--gold);
+      padding: .55rem 1.2rem;
+      transition: background .2s;
+    }
+    .dd-footer-call:hover { background: #a08558; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 5vw;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background:
+        linear-gradient(160deg, var(--cream) 55%, var(--mist) 100%);
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 52%; height: 100%;
+      background: var(--ink);
+      clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+    }
+    /* River wave decoration */
+    .hero-bg::after {
+      content: '';
+      position: absolute; top: 50%; right: 26%;
+      transform: translateY(-50%);
+      width: 1px; height: 40vh;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      opacity: .5;
+    }
+
+    .hero-left {
+      position: relative; z-index: 1;
+      padding-right: 4rem;
+      animation: fadeUp .9s ease both;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1rem;
+      color: var(--gold);
+      letter-spacing: .18em;
+      margin-bottom: 1.4rem;
+      display: flex; align-items: center; gap: .8rem;
+    }
+    .hero-eyebrow::before {
+      content: ''; display: block;
+      width: 32px; height: 1px; background: var(--gold);
+    }
+
+    .hero-title {
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 300;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      line-height: 1.2;
+      letter-spacing: .08em;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .hero-title strong {
+      font-weight: 700;
+      display: block;
+    }
+
+    .hero-divider {
+      width: 48px; height: 2px;
+      background: var(--gold);
+      margin: 1.6rem 0;
+    }
+
+    .hero-sub {
+      font-size: .9rem; line-height: 1.9;
+      color: var(--slate);
+      max-width: 380px;
+      margin-bottom: 2.4rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--white);
+      padding: .85rem 2.2rem;
+      font-size: .82rem;
+      letter-spacing: .12em;
+      text-decoration: none;
+      transition: background .2s, transform .2s;
+    }
+    .btn-primary:hover { background: #a08558; transform: translateY(-2px); }
+
+    .btn-ghost {
+      display: inline-block;
+      border: 1px solid var(--border);
+      color: var(--slate);
+      padding: .85rem 2rem;
+      font-size: .82rem;
+      letter-spacing: .1em;
+      text-decoration: none;
+      margin-left: 1rem;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-right {
+      position: relative; z-index: 1;
+      display: flex; flex-direction: column;
+      align-items: flex-start;
+      padding: 5rem 0 5rem 4rem;
+      animation: fadeUp .9s .2s ease both;
+    }
+
+    .hero-seal {
+      font-family: 'Noto Serif TC', serif;
+      color: rgba(255,255,255,.06);
+      font-size: clamp(6rem, 12vw, 11rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -.02em;
+      position: absolute;
+      right: 5vw; top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .stat-row {
+      display: flex; flex-direction: column; gap: 1.4rem;
+      position: relative; z-index: 2;
+    }
+    .stat-item { border-left: 2px solid var(--gold); padding-left: 1.4rem; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.9rem; font-weight: 300;
+      color: var(--white); line-height: 1;
+    }
+    .stat-label {
+      font-size: .72rem; letter-spacing: .15em;
+      color: rgba(255,255,255,.55);
+      margin-top: .3rem;
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 7rem 5vw; }
+
+    .section-tag {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: .9rem;
+      color: var(--gold);
+      letter-spacing: .2em;
+      display: flex; align-items: center; gap: .7rem;
+      margin-bottom: 1rem;
+    }
+    .section-tag::before {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--gold);
+    }
+
+    .section-title {
+      font-family: 'Noto Serif TC', serif;
+      font-weight: 300;
+      font-size: clamp(1.7rem, 2.5vw, 2.4rem);
+      letter-spacing: .06em;
+      line-height: 1.4;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .section-title strong { font-weight: 700; }
+
+    /* ── ABOUT ── */
+    #about {
+      background: var(--white);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+
+    .about-visual {
+      position: relative;
+    }
+    .about-card {
+      background: var(--ink);
+      padding: 3rem;
+      position: relative;
+    }
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: -12px; right: 12px; bottom: 12px;
+      border: 1px solid var(--border);
+      z-index: -1;
+    }
+    .about-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.35rem;
+      line-height: 1.7;
+      color: rgba(255,255,255,.88);
+    }
+    .about-quote-mark {
+      font-size: 4rem; line-height: .5;
+      color: var(--gold); opacity: .4;
+      font-family: 'Cormorant Garamond', serif;
+      display: block; margin-bottom: .5rem;
+    }
+    .about-attr {
+      font-size: .75rem; letter-spacing: .12em;
+      color: var(--gold);
+      margin-top: 1.8rem;
+    }
+
+    .about-text p {
+      font-size: .9rem; line-height: 2;
+      color: var(--slate);
+      margin-bottom: 1.2rem;
+    }
+    .about-values {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin-top: 2rem;
+    }
+    .value-item {
+      padding: 1.2rem;
+      border: 1px solid var(--border);
+      background: var(--mist);
+    }
+    .value-icon { font-size: 1.4rem; margin-bottom: .5rem; }
+    .value-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: .85rem; font-weight: 500;
+      letter-spacing: .08em;
+      color: var(--ink); margin-bottom: .3rem;
+    }
+    .value-desc { font-size: .75rem; color: var(--mid); line-height: 1.7; }
+
+    /* ── SERVICES ── */
+    #services { background: var(--mist); }
+
+    .services-header { max-width: 580px; margin-bottom: 4rem; }
+    .services-header p { font-size: .9rem; color: var(--slate); line-height: 1.9; margin-top: 1rem; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5px;
+      background: var(--border);
+    }
+
+    .service-card {
+      background: var(--cream);
+      padding: 3rem 2.5rem;
+      transition: background .25s, transform .25s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--gold);
+      transform: scaleX(0);
+      transition: transform .3s;
+    }
+    .service-card:hover { background: var(--white); transform: translateY(-4px); }
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 300;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: color .25s;
+    }
+    .service-card:hover .service-num { color: var(--gold-lt); }
+
+    .service-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+
+    .service-name {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1.1rem; font-weight: 500;
+      letter-spacing: .1em;
+      color: var(--ink);
+      margin-bottom: .8rem;
+    }
+
+    .service-desc {
+      font-size: .8rem; line-height: 1.9;
+      color: var(--slate);
+    }
+
+    .service-tags {
+      display: flex; flex-wrap: wrap; gap: .4rem;
+      margin-top: 1.4rem;
+    }
+    .tag {
+      font-size: .7rem; letter-spacing: .1em;
+      padding: .25rem .7rem;
+      border: 1px solid var(--border);
+      color: var(--mid);
+    }
+
+    /* ── WHY US ── */
+    #why {
+      background: var(--ink);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+    }
+    #why .section-tag { color: var(--gold-lt); }
+    #why .section-tag::before { background: var(--gold-lt); }
+    #why .section-title { color: var(--white); }
+
+    .why-text p { font-size: .9rem; color: rgba(255,255,255,.6); line-height: 2; margin-top: 1rem; }
+
+    .why-list { list-style: none; display: flex; flex-direction: column; gap: 1.4rem; }
+    .why-item {
+      display: flex; gap: 1.2rem; align-items: flex-start;
+      padding: 1.4rem;
+      border: 1px solid rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+      transition: border-color .25s, background .25s;
+    }
+    .why-item:hover {
+      border-color: rgba(184,157,110,.3);
+      background: rgba(184,157,110,.06);
+    }
+    .why-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .why-item-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: .9rem; font-weight: 500;
+      color: var(--white); letter-spacing: .06em;
+      margin-bottom: .3rem;
+    }
+    .why-item-desc {
+      font-size: .8rem; color: rgba(255,255,255,.5);
+      line-height: 1.8;
+    }
+
+    /* ── PROCESS ── */
+    #process { background: var(--white); }
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 3.5rem;
+      position: relative;
+    }
+    .process-grid::before {
+      content: '';
+      position: absolute;
+      top: 2.5rem; left: 12.5%; right: 12.5%;
+      height: 1px;
+      background: var(--border);
+      z-index: 0;
+    }
+    .process-step {
+      padding: 0 1.5rem;
+      position: relative; z-index: 1;
+      text-align: center;
+    }
+    .step-circle {
+      width: 5rem; height: 5rem;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.5rem;
+      background: var(--white);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 300;
+      color: var(--gold);
+      transition: background .25s, color .25s;
+    }
+    .process-step:hover .step-circle {
+      background: var(--gold); color: var(--white);
+    }
+    .step-title {
+      font-family: 'Noto Serif TC', serif;
+      font-size: .9rem; font-weight: 500;
+      color: var(--ink); letter-spacing: .08em;
+      margin-bottom: .5rem;
+    }
+    .step-desc { font-size: .78rem; color: var(--mid); line-height: 1.8; }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--mist);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .contact-info-items { display: flex; flex-direction: column; gap: 1.8rem; margin-top: 2.5rem; }
+    .contact-info-item { display: flex; gap: 1.2rem; align-items: flex-start; }
+    .ci-icon {
+      width: 2.4rem; height: 2.4rem;
+      background: var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; flex-shrink: 0;
+      color: var(--white);
+    }
+    .ci-label { font-size: .7rem; letter-spacing: .12em; color: var(--mid); margin-bottom: .2rem; }
+    .ci-value { font-size: .88rem; color: var(--ink); }
+
+    .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form-group { display: flex; flex-direction: column; gap: .4rem; }
+    .form-group label { font-size: .75rem; letter-spacing: .12em; color: var(--mid); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: .85rem 1rem;
+      border: 1px solid var(--border);
+      background: var(--white);
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: .85rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s;
+      resize: none;
+      appearance: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+    .form-group textarea { height: 120px; }
+
+    .form-note { font-size: .72rem; color: var(--mid); line-height: 1.7; }
+    .form-submit {
+      background: var(--gold); color: var(--white);
+      border: none; cursor: pointer;
+      padding: 1rem;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: .82rem; letter-spacing: .12em;
+      transition: background .2s;
+    }
+    .form-submit:hover { background: #a08558; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 3.5rem 5vw;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .footer-logo {
+      font-family: 'Noto Serif TC', serif;
+      font-size: 1rem; font-weight: 500;
+      letter-spacing: .12em; color: var(--white);
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-copy { font-size: .72rem; color: rgba(255,255,255,.35); letter-spacing: .08em; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a { font-size: .72rem; color: rgba(255,255,255,.4); text-decoration: none; letter-spacing: .1em; transition: color .2s; }
+    .footer-links a:hover { color: var(--gold); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── FLOAT CALL BUTTON ── */
+    .float-call {
+      position: fixed;
+      bottom: 2rem; right: 2rem;
+      z-index: 999;
+      display: flex; align-items: center;
+      gap: .7rem;
+      background: var(--gold);
+      color: var(--white);
+      text-decoration: none;
+      padding: .85rem 1.4rem .85rem 1.1rem;
+      border-radius: 50px;
+      box-shadow: 0 6px 24px rgba(184,157,110,0.45);
+      font-size: .82rem; letter-spacing: .1em;
+      font-family: 'Noto Sans TC', sans-serif;
+      transition: background .2s, transform .2s, box-shadow .2s;
+      white-space: nowrap;
+    }
+    .float-call:hover {
+      background: #a08558;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 32px rgba(184,157,110,0.55);
+    }
+    .float-call:active { transform: scale(.96); }
+
+    .float-call .call-icon {
+      width: 2.2rem; height: 2.2rem;
+      background: rgba(255,255,255,.2);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      animation: ring 2.5s ease infinite;
+      flex-shrink: 0;
+    }
+    .float-call .call-label { line-height: 1.3; }
+    .float-call .call-label small {
+      display: block; font-size: .68rem;
+      opacity: .8; letter-spacing: .08em;
+    }
+
+    @keyframes ring {
+      0%, 100% { transform: rotate(0deg); }
+      10%       { transform: rotate(-18deg); }
+      20%       { transform: rotate(16deg); }
+      30%       { transform: rotate(-12deg); }
+      40%       { transform: rotate(8deg); }
+      50%       { transform: rotate(0deg); }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      #hero { grid-template-columns: 1fr; min-height: auto; padding-top: 10rem; padding-bottom: 4rem; }
+      .hero-bg::before { display: none; }
+      .hero-right { display: none; }
+      #about, #why, #contact { grid-template-columns: 1fr; gap: 3rem; }
+      .services-grid { grid-template-columns: 1fr; }
+      .process-grid { grid-template-columns: 1fr 1fr; }
+      .process-grid::before { display: none; }
+      .nav-links { display: none; }
+      .about-values { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <button class="hamburger" id="hamburgerBtn" aria-label="開啟選單">
+    <span></span><span></span><span></span>
+  </button>
+  <a class="nav-logo" href="#">禹<span>河</span>法律事務所</a>
+  <ul class="nav-links">
+    <li><a href="about.html">關於我們</a></li>
+    <li><a href="#contact">聯絡我們</a></li>
+  </ul>
+  <a class="nav-cta" href="#contact">預約諮詢</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">Yu He Law Office</div>
+    <h1 class="hero-title">
+      守護您的<br>
+      <strong>法律權益</strong>
+    </h1>
+    <div class="hero-divider"></div>
+    <p class="hero-sub">
+      禹河法律事務所深耕民事、家事、刑事與行政法律領域，
+      以專業法律知識與細膩關懷，
+      陪伴每一位當事人走過法律的每個關鍵時刻。
+    </p>
+    <a href="#contact" class="btn-primary">預約免費諮詢</a>
+    <a href="#services" class="btn-ghost">了解業務範圍</a>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-seal">禹河</div>
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">民事</div>
+        <div class="stat-label">債務、契約、侵權損害賠償</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">家事</div>
+        <div class="stat-label">離婚、監護、繼承、贍養費</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">刑事</div>
+        <div class="stat-label">偵查陪同、辯護、告訴代理</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">行政</div>
+        <div class="stat-label">訴願、行政訴訟、國家賠償</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">專業</div>
+        <div class="stat-label">台灣各級法院訴訟代理</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-card">
+      <span class="about-quote-mark">"</span>
+      <p class="about-quote">
+        法律不只是條文，<br>
+        更是每個人與生俱來的<br>
+        公平保障。
+      </p>
+      <div class="about-attr">— 禹河法律事務所 執業理念</div>
+    </div>
+  </div>
+
+  <div class="about-text reveal">
+    <div class="section-tag">關於我們</div>
+    <h2 class="section-title">以<strong>專業</strong>為基，<br>以<strong>信任</strong>為本</h2>
+    <p>
+      禹河法律事務所由具豐富訴訟經驗的律師團隊組成，深耕民事與家事法律領域。
+      我們深知每一個案件背後，都承載著當事人的切身利益與人生重量。
+    </p>
+    <p>
+      從初次諮詢、策略規劃到庭審代理，我們提供全程陪伴的法律服務，
+      確保您在每個法律程序中都能做出清晰、有自信的決策。
+    </p>
+    <div class="about-values">
+      <div class="value-item">
+        <div class="value-icon">⚖️</div>
+        <div class="value-title">公正客觀</div>
+        <div class="value-desc">以事實為基礎，提供中立、務實的法律意見</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">🤝</div>
+        <div class="value-title">細膩關懷</div>
+        <div class="value-desc">理解家事糾紛的情感面向，給予全方位支持</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">📋</div>
+        <div class="value-title">透明溝通</div>
+        <div class="value-desc">清楚說明法律程序與費用，無隱藏資訊</div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">🏛️</div>
+        <div class="value-title">豐富經驗</div>
+        <div class="value-desc">代理各級法院訴訟，熟悉司法實務運作</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div class="section-tag">業務範圍</div>
+    <h2 class="section-title">深耕<strong>四大領域</strong>，<br>提供完整法律服務</h2>
+    <p>我們深耕民事、家事、刑事與行政四大領域，以深度專業取代廣泛涉獵，讓您的案件由最熟悉相關法規的律師全程處理。</p>
+  </div>
+
+  <div class="services-grid reveal">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">📄</div>
+      <div class="service-name">債務與契約</div>
+      <div class="service-desc">
+        借貸糾紛、票據訴訟、買賣契約爭議、工程款請求、損害賠償等各類民事債務案件之訴訟代理與法律諮詢。
+      </div>
+      <div class="service-tags">
+        <span class="tag">借貸糾紛</span>
+        <span class="tag">票據訴訟</span>
+        <span class="tag">契約爭議</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">🏠</div>
+      <div class="service-name">不動產與物權</div>
+      <div class="service-desc">
+        土地、房屋買賣糾紛、租賃爭議、共有物分割、地上權、抵押權實行及不動產所有權確認訴訟。
+      </div>
+      <div class="service-tags">
+        <span class="tag">房地產糾紛</span>
+        <span class="tag">租賃爭議</span>
+        <span class="tag">共有物分割</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">👨‍👩‍👧</div>
+      <div class="service-name">離婚與贍養</div>
+      <div class="service-desc">
+        協議離婚、裁判離婚、離婚協議書擬定、贍養費請求、夫妻財產分配及剩餘財產差額分配請求。
+      </div>
+      <div class="service-tags">
+        <span class="tag">裁判離婚</span>
+        <span class="tag">贍養費</span>
+        <span class="tag">財產分配</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">👶</div>
+      <div class="service-name">監護與親權</div>
+      <div class="service-desc">
+        未成年子女監護權爭取、親權行使酌定、會面交往安排、扶養費請求及強制執行等相關程序。
+      </div>
+      <div class="service-tags">
+        <span class="tag">監護權</span>
+        <span class="tag">親權酌定</span>
+        <span class="tag">扶養費</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">📜</div>
+      <div class="service-name">繼承與遺產</div>
+      <div class="service-desc">
+        遺產分割、遺囑效力爭議、拋棄繼承、限定繼承聲請、特留分扣減及遺產稅相關法律諮詢。
+      </div>
+      <div class="service-tags">
+        <span class="tag">遺產分割</span>
+        <span class="tag">遺囑爭議</span>
+        <span class="tag">拋棄繼承</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">🛡️</div>
+      <div class="service-name">非訟與調解</div>
+      <div class="service-desc">
+        家事調解、法院外和解談判、聲請假扣押假處分、本票裁定、督促程序等非訟事件處理。
+      </div>
+      <div class="service-tags">
+        <span class="tag">調解程序</span>
+        <span class="tag">假扣押</span>
+        <span class="tag">督促程序</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">07</div>
+      <div class="service-icon">⚖️</div>
+      <div class="service-name">刑事辯護</div>
+      <div class="service-desc">
+        偵查階段陪同訊問、辯護律師委任、聲請交保、刑事告訴代理、上訴撤銷及緩起訴、緩刑聲請等刑事程序全程代理。
+      </div>
+      <div class="service-tags">
+        <span class="tag">偵查陪同</span>
+        <span class="tag">刑事辯護</span>
+        <span class="tag">刑事告訴</span>
+      </div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-num">08</div>
+      <div class="service-icon">🏛️</div>
+      <div class="service-name">行政爭訟</div>
+      <div class="service-desc">
+        行政訴願、行政訴訟代理、國家賠償請求、違規裁罰救濟、地政行政處分爭議及稅務行政爭訟等案件處理。
+      </div>
+      <div class="service-tags">
+        <span class="tag">行政訴願</span>
+        <span class="tag">行政訴訟</span>
+        <span class="tag">國家賠償</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why-text reveal">
+    <div class="section-tag">為何選擇我們</div>
+    <h2 class="section-title">讓<strong>專業</strong>與<strong>信任</strong><br>成為您最強後盾</h2>
+    <p>
+      面對法律紛爭，您需要的不只是一位律師，而是一個能真正理解您處境、為您設計最佳策略的法律夥伴。
+    </p>
+  </div>
+
+  <ul class="why-list reveal">
+    <li class="why-item">
+      <span class="why-icon">🎯</span>
+      <div>
+        <div class="why-item-title">專注領域，精準策略</div>
+        <div class="why-item-desc">深耕民事與家事法律，熟悉各類案件模式，為您制定最有效的訴訟或和解策略。</div>
+      </div>
+    </li>
+    <li class="why-item">
+      <span class="why-icon">💬</span>
+      <div>
+        <div class="why-item-title">即時溝通，全程透明</div>
+        <div class="why-item-desc">案件進度隨時更新，法律費用事前清楚說明，讓您掌握每一個關鍵進展。</div>
+      </div>
+    </li>
+    <li class="why-item">
+      <span class="why-icon">❤️</span>
+      <div>
+        <div class="why-item-title">同理心出發，細膩陪伴</div>
+        <div class="why-item-desc">家事案件牽涉深刻情感，我們以同理心傾聽，在法律之外給予您完整的心理支持。</div>
+      </div>
+    </li>
+    <li class="why-item">
+      <span class="why-icon">🏛️</span>
+      <div>
+        <div class="why-item-title">豐富庭審實戰經驗</div>
+        <div class="why-item-desc">熟悉臺灣各級法院訴訟程序及實務，有效掌握案件節奏，爭取最佳訴訟結果。</div>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="reveal" style="text-align:center; max-width:540px; margin:0 auto;">
+    <div class="section-tag" style="justify-content:center;">諮詢流程</div>
+    <h2 class="section-title">四步驟，<strong>簡單開始</strong><br>您的法律之路</h2>
+  </div>
+
+  <div class="process-grid reveal">
+    <div class="process-step">
+      <div class="step-circle">01</div>
+      <div class="step-title">預約諮詢</div>
+      <div class="step-desc">電話或線上填表預約，我們將在一個工作天內回覆確認時間。</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">02</div>
+      <div class="step-title">案情評估</div>
+      <div class="step-desc">律師詳細聽取案情，初步分析法律爭點，評估訴訟可行性。</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">03</div>
+      <div class="step-title">策略規劃</div>
+      <div class="step-desc">提出最適合您案件的法律策略與時程規劃，說明費用結構。</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">04</div>
+      <div class="step-title">全程委任</div>
+      <div class="step-desc">正式委任後，由律師代理全程訴訟或協商，為您爭取最佳結果。</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="reveal">
+    <div class="section-tag">聯絡我們</div>
+    <h2 class="section-title">預約<strong>法律諮詢</strong></h2>
+    <p style="font-size:.9rem;color:var(--slate);line-height:2;margin-top:1rem;max-width:360px;">
+      無論您面對的是複雜的財產糾紛，或是艱難的家庭法律問題，
+      我們都願意傾聽並給予最專業的協助。
+    </p>
+    <div class="contact-info-items">
+      <div class="contact-info-item">
+        <div class="ci-icon">📍</div>
+        <div>
+          <div class="ci-label">事務所地址</div>
+          <div class="ci-value">桃園市中壢區中山東路二段28號4樓</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="ci-icon">📞</div>
+        <div>
+          <div class="ci-label">電話</div>
+          <div class="ci-value">0917-551-313</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="ci-icon">✉️</div>
+        <div>
+          <div class="ci-label">電子郵件</div>
+          <div class="ci-value">lawyershihtung@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-info-item">
+        <div class="ci-icon">🕐</div>
+        <div>
+          <div class="ci-label">辦公時間</div>
+          <div class="ci-value">週一至週五　09:00 – 18:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <!-- ★ 將下方 YOUR_FORM_ID 換成您在 formspree.io 建立的表單 ID -->
+    <form id="contactForm" class="contact-form" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="f-name">姓名 <span style="color:var(--gold)">*</span></label>
+          <input id="f-name" name="姓名" type="text" placeholder="您的姓名" required>
+        </div>
+        <div class="form-group">
+          <label for="f-tel">聯絡電話 <span style="color:var(--gold)">*</span></label>
+          <input id="f-tel" name="聯絡電話" type="tel" placeholder="0912-345-678" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="f-email">電子郵件</label>
+        <input id="f-email" name="電子郵件" type="email" placeholder="email@example.com">
+      </div>
+      <div class="form-group">
+        <label for="f-type">案件類型 <span style="color:var(--gold)">*</span></label>
+        <select id="f-type" name="案件類型" required>
+          <option value="" disabled selected>請選擇業務類型</option>
+          <option>債務與契約糾紛</option>
+          <option>不動產與物權爭議</option>
+          <option>離婚與贍養費</option>
+          <option>監護權與親權</option>
+          <option>繼承與遺產分配</option>
+          <option>非訟與調解</option>
+          <option>其他</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="f-msg">案情簡述</label>
+        <textarea id="f-msg" name="案情簡述" placeholder="請簡要描述您的法律問題（此表單資料均受保密原則保護）"></textarea>
+      </div>
+      <p class="form-note">
+        ＊ 本表單所填寫之資料受律師保密義務保護，僅供本所律師評估使用，不會對外揭露。
+      </p>
+
+      <!-- 送出按鈕 -->
+      <button type="submit" class="form-submit" id="submitBtn">
+        <span id="btnText">送出諮詢申請</span>
+        <span id="btnSpinner" style="display:none">傳送中…</span>
+      </button>
+
+      <!-- 狀態訊息 -->
+      <div id="formMsg" style="display:none; margin-top:1rem; padding:.9rem 1.2rem; font-size:.82rem; letter-spacing:.06em; line-height:1.7;"></div>
+    </form>
+  </div>
+</section>
+
+
+<!-- DROPDOWN MENU -->
+<div class="dropdown" id="dropdown">
+  <div class="dropdown-inner">
+
+    <div class="dd-item">
+      <a class="dd-main" href="about.html" data-dd-close>關於我們</a>
+    </div>
+
+    <div class="dd-item" id="dd-service">
+      <button class="dd-main has-sub" data-dd-toggle="dd-service">
+        服務項目 <span class="dd-arrow">▼</span>
+      </button>
+      <div class="dd-sub">
+        <a href="#services" data-dd-close>債務與契約糾紛</a>
+        <a href="#services" data-dd-close>不動產與物權爭議</a>
+        <a href="#services" data-dd-close>離婚與贍養費</a>
+        <a href="#services" data-dd-close>監護權與親權</a>
+        <a href="#services" data-dd-close>繼承與遺產分配</a>
+        <a href="#services" data-dd-close>非訟與調解</a>
+        <a href="#services" data-dd-close>刑事辯護</a>
+        <a href="#services" data-dd-close>行政爭訟</a>
+      </div>
+    </div>
+
+    <div class="dd-item">
+      <a class="dd-main" href="#" data-dd-close>最新消息</a>
+    </div>
+
+    <div class="dd-item">
+      <a class="dd-main" href="#" data-dd-close>成功案例</a>
+    </div>
+
+    <div class="dd-item">
+      <a class="dd-main" href="#" data-dd-close>問與答</a>
+    </div>
+
+    <div class="dd-item" id="dd-knowledge">
+      <button class="dd-main has-sub" data-dd-toggle="dd-knowledge">
+        法律知識 <span class="dd-arrow">▼</span>
+      </button>
+      <div class="dd-sub">
+        <a href="#" data-dd-close>民事法律常識</a>
+        <a href="#" data-dd-close>家事法律常識</a>
+        <a href="#" data-dd-close>訴訟流程說明</a>
+        <a href="#" data-dd-close>常見法律問題</a>
+      </div>
+    </div>
+
+    <div class="dd-item">
+      <a class="dd-main" href="#contact" data-dd-close>聯絡我們</a>
+    </div>
+
+  </div>
+  <div class="dd-footer">
+    <span class="dd-footer-text">禹河法律事務所　桃園市中壢區</span>
+    <a class="dd-footer-call" href="tel:0917551313">📞 0917-551-313</a>
+  </div>
+</div>
+
+<!-- FLOAT CALL BUTTON -->
+<a class="float-call" href="tel:0917551313">
+  <span class="call-icon">📞</span>
+  <span class="call-label">
+    立即來電
+    <small>0917-551-313</small>
+  </span>
+</a>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">禹<span>河</span>法律事務所</div>
+  <div class="footer-links">
+    <a href="about.html">關於我們</a>
+    <a href="#services">業務範圍</a>
+    <a href="#contact">聯絡我們</a>
+  </div>
+  <div class="footer-copy">© 2025 禹河法律事務所　保留一切權利</div>
+</footer>
+
+<script>
+  // ── Dropdown Menu ──
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const dropdown     = document.getElementById('dropdown');
+
+  function toggleDropdown() {
+    const isOpen = dropdown.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  }
+  function closeDropdown() {
+    dropdown.classList.remove('open');
+    hamburgerBtn.classList.remove('open');
+    document.body.style.overflow = '';
+    document.querySelectorAll('.dd-item.expanded').forEach(el => el.classList.remove('expanded'));
+  }
+
+  hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDropdown(); });
+
+  // Sub-accordion
+  document.querySelectorAll('[data-dd-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = document.getElementById(btn.dataset.ddToggle);
+      item.classList.toggle('expanded');
+    });
+  });
+
+  // Close on link click
+  document.querySelectorAll('[data-dd-close]').forEach(el => {
+    el.addEventListener('click', closeDropdown);
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+      closeDropdown();
+    }
+  });
+
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 30);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── Formspree 送出 ──
+  // ★ 將 YOUR_FORM_ID 換成您的 Formspree 表單 ID（例如 xyzabcde）
+  const FORMSPREE_ID = 'xjgzoqzd';
+
+  const form       = document.getElementById('contactForm');
+  const submitBtn  = document.getElementById('submitBtn');
+  const btnText    = document.getElementById('btnText');
+  const btnSpinner = document.getElementById('btnSpinner');
+  const formMsg    = document.getElementById('formMsg');
+
+  function showMsg(text, isError) {
+    formMsg.textContent = text;
+    formMsg.style.display = 'block';
+    formMsg.style.background  = isError ? 'rgba(180,60,60,0.08)' : 'rgba(184,157,110,0.12)';
+    formMsg.style.border      = isError ? '1px solid rgba(180,60,60,0.3)' : '1px solid var(--border)';
+    formMsg.style.color       = isError ? '#a03030' : 'var(--slate)';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // 簡易必填驗證
+    const name  = document.getElementById('f-name').value.trim();
+    const tel   = document.getElementById('f-tel').value.trim();
+    const type  = document.getElementById('f-type').value;
+    if (!name || !tel || !type) {
+      showMsg('請填寫姓名、聯絡電話及案件類型後再送出。', true);
+      return;
+    }
+
+    if (FORMSPREE_ID === 'YOUR_FORM_ID') {
+      showMsg('⚠️ 尚未設定 Formspree ID，請至 formspree.io 建立表單後，將 YOUR_FORM_ID 替換為您的表單 ID。', true);
+      return;
+    }
+
+    // 送出中狀態
+    btnText.style.display    = 'none';
+    btnSpinner.style.display = 'inline';
+    submitBtn.disabled       = true;
+    formMsg.style.display    = 'none';
+
+    try {
+      const data = new FormData(form);
+      const res  = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method:  'POST',
+        body:    data,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (res.ok) {
+        form.reset();
+        showMsg('✅ 諮詢申請已成功送出！我們將於一個工作天內以電話或電子郵件與您聯繫，感謝您。', false);
+      } else {
+        const json = await res.json().catch(() => ({}));
+        const err  = (json.errors || []).map(e => e.message).join('、') || '未知錯誤';
+        showMsg(`送出失敗：${err}，請稍後再試或直接來電聯繫。`, true);
+      }
+    } catch {
+      showMsg('網路連線異常，請稍後再試，或直接來電 0917-551-313 聯繫我們。', true);
+    } finally {
+      btnText.style.display    = 'inline';
+      btnSpinner.style.display = 'none';
+      submitBtn.disabled       = false;
+    }
+  });
+</script>
+</body>
+</html>
