@@ -59,14 +59,14 @@
 
     .nav-logo {
       font-family: 'Noto Serif TC', serif; font-weight: 500;
-      font-size: 1.05rem; letter-spacing: .12em;
+      font-size: 1.2rem; letter-spacing: .12em;
       color: var(--ink); text-decoration: none;
     }
     .nav-logo span { color: var(--gold); }
 
     .nav-links { display: flex; gap: 2.2rem; list-style: none; }
     .nav-links a {
-      font-size: .8rem; letter-spacing: .1em;
+      font-size: 0.95rem; letter-spacing: .1em;
       color: var(--slate); text-decoration: none; transition: color .2s;
       position: relative;
     }
@@ -81,7 +81,7 @@
     .nav-links a.active::after { transform: scaleX(1); }
 
     .nav-cta {
-      font-size: .8rem; letter-spacing: .1em;
+      font-size: 0.95rem; letter-spacing: .1em;
       padding: .5rem 1.3rem; border: 1px solid var(--gold);
       color: var(--gold); text-decoration: none;
       transition: background .2s, color .2s;
@@ -106,24 +106,24 @@
     .dd-main {
       display: flex; align-items: center; justify-content: space-between;
       padding: 1.1rem 1.6rem; font-family: 'Noto Serif TC', serif;
-      font-size: .95rem; letter-spacing: .08em;
+      font-size: 1.1rem; letter-spacing: .08em;
       color: var(--slate); text-decoration: none;
       background: none; border: none; cursor: pointer; width: 100%;
       text-align: left; border-bottom: 2px solid transparent;
       transition: color .2s, border-color .2s, background .2s;
     }
     .dd-main:hover { color: var(--gold); background: var(--mist); border-bottom-color: var(--gold); }
-    .dd-arrow { font-size: .65rem; color: var(--mid); transition: transform .3s, color .3s; flex-shrink: 0; margin-left: .5rem; }
+    .dd-arrow { font-size: 0.8rem; color: var(--mid); transition: transform .3s, color .3s; flex-shrink: 0; margin-left: .5rem; }
     .dd-item.expanded .dd-arrow { transform: rotate(180deg); color: var(--gold); }
     .dd-sub { max-height: 0; overflow: hidden; transition: max-height .3s ease; background: var(--mist); border-top: 1px solid var(--border); }
     .dd-item.expanded .dd-sub { max-height: 400px; }
-    .dd-sub a { display: block; padding: .75rem 1.6rem .75rem 2rem; font-size: .82rem; letter-spacing: .07em; color: var(--mid); text-decoration: none; border-bottom: 1px solid rgba(184,157,110,.1); transition: color .2s, background .2s, padding-left .2s; }
+    .dd-sub a { display: block; padding: .75rem 1.6rem .75rem 2rem; font-size: 0.97rem; letter-spacing: .07em; color: var(--mid); text-decoration: none; border-bottom: 1px solid rgba(184,157,110,.1); transition: color .2s, background .2s, padding-left .2s; }
     .dd-sub a:last-child { border-bottom: none; }
-    .dd-sub a::before { content: "—　"; color: var(--gold-lt); font-size: .7rem; }
+    .dd-sub a::before { content: "—　"; color: var(--gold-lt); font-size: 0.85rem; }
     .dd-sub a:hover { color: var(--gold); background: rgba(184,157,110,.07); padding-left: 2.3rem; }
     .dd-footer { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.6rem; background: var(--ink); }
-    .dd-footer-text { font-size: .75rem; letter-spacing: .1em; color: rgba(255,255,255,.5); }
-    .dd-footer-call { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--white); font-size: .82rem; letter-spacing: .1em; background: var(--gold); padding: .55rem 1.2rem; transition: background .2s; }
+    .dd-footer-text { font-size: 0.9rem; letter-spacing: .1em; color: rgba(255,255,255,.5); }
+    .dd-footer-call { display: flex; align-items: center; gap: .6rem; text-decoration: none; color: var(--white); font-size: 0.97rem; letter-spacing: .1em; background: var(--gold); padding: .55rem 1.2rem; transition: background .2s; }
     .dd-footer-call:hover { background: #a08558; }
 
     /* ── PAGE HERO ── */
@@ -147,7 +147,7 @@
     }
     .breadcrumb {
       display: flex; align-items: center; gap: .6rem;
-      font-size: .75rem; letter-spacing: .1em; color: rgba(255,255,255,.4);
+      font-size: 0.9rem; letter-spacing: .1em; color: rgba(255,255,255,.4);
       margin-bottom: 1.4rem;
     }
     .breadcrumb a { color: var(--gold-lt); text-decoration: none; transition: color .2s; }
@@ -166,7 +166,7 @@
       margin: 1.4rem 0;
     }
     .page-hero-sub {
-      font-size: .9rem; color: rgba(255,255,255,.55);
+      font-size: 1.05rem; color: rgba(255,255,255,.55);
       letter-spacing: .08em; line-height: 1.9;
       max-width: 480px;
     }
@@ -174,7 +174,7 @@
     /* ── SECTION SHARED ── */
     .section-tag {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-size: .9rem; color: var(--gold); letter-spacing: .2em;
+      font-size: 1.05rem; color: var(--gold); letter-spacing: .2em;
       display: flex; align-items: center; gap: .7rem; margin-bottom: 1rem;
     }
     .section-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--gold); }
@@ -193,7 +193,7 @@
       background: var(--white);
     }
     .intro-text p {
-      font-size: .92rem; line-height: 2.1;
+      font-size: 1.07rem; line-height: 2.1;
       color: var(--slate); margin-bottom: 1.3rem;
     }
     .intro-text p:last-child { margin-bottom: 0; }
@@ -219,12 +219,12 @@
     }
     .firm-quote-mark {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 5rem; line-height: .6; color: var(--gold);
+      font-size: 5.15rem; line-height: .6; color: var(--gold);
       opacity: .35; display: block; margin-bottom: .6rem;
     }
     .firm-quote-text {
       font-family: 'Noto Serif TC', serif; font-weight: 300;
-      font-size: 1.15rem; line-height: 1.9;
+      font-size: 1.3rem; line-height: 1.9;
       color: rgba(255,255,255,.88); letter-spacing: .05em;
     }
     .firm-quote-footer {
@@ -233,7 +233,7 @@
       display: flex; align-items: center; gap: .8rem;
     }
     .firm-quote-line { width: 24px; height: 1px; background: var(--gold); }
-    .firm-quote-attr { font-size: .72rem; letter-spacing: .15em; color: var(--gold-lt); }
+    .firm-quote-attr { font-size: 0.87rem; letter-spacing: .15em; color: var(--gold-lt); }
 
     /* ── VALUES ROW ── */
     #values {
@@ -257,13 +257,13 @@
     }
     .value-card:hover { background: var(--white); }
     .value-card:hover::before { transform: scaleX(1); }
-    .value-icon-lg { font-size: 2rem; margin-bottom: 1rem; }
+    .value-icon-lg { font-size: 2.15rem; margin-bottom: 1rem; }
     .value-card-title {
-      font-family: 'Noto Serif TC', serif; font-size: 1rem;
+      font-family: 'Noto Serif TC', serif; font-size: 1.15rem;
       font-weight: 500; letter-spacing: .1em; color: var(--ink);
       margin-bottom: .6rem;
     }
-    .value-card-desc { font-size: .8rem; color: var(--slate); line-height: 1.9; }
+    .value-card-desc { font-size: 0.95rem; color: var(--slate); line-height: 1.9; }
 
     /* ── LAWYER SECTION ── */
     #lawyer {
@@ -304,18 +304,18 @@
     }
     .lawyer-name-en {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-size: .85rem; letter-spacing: .2em;
+      font-size: 1.0rem; letter-spacing: .2em;
       color: var(--gold-lt); margin-bottom: .5rem;
     }
     .lawyer-name-zh {
       font-family: 'Noto Serif TC', serif;
-      font-size: 2rem; font-weight: 500;
+      font-size: 2.15rem; font-weight: 500;
       letter-spacing: .15em; color: var(--white); line-height: 1.1;
     }
     .lawyer-title-badge {
       display: inline-block; margin-top: .8rem;
       background: var(--gold); color: var(--white);
-      font-size: .7rem; letter-spacing: .15em;
+      font-size: 0.85rem; letter-spacing: .15em;
       padding: .3rem .9rem;
     }
     .lawyer-divider { height: 1px; background: var(--border); margin: 1.5rem 0 0; }
@@ -330,14 +330,14 @@
       border-bottom: 1px solid var(--border);
     }
     .meta-row:last-child { border-bottom: none; }
-    .meta-icon { font-size: 1rem; flex-shrink: 0; margin-top: .05rem; }
-    .meta-label { font-size: .68rem; letter-spacing: .1em; color: var(--mid); margin-bottom: .15rem; }
-    .meta-value { font-size: .82rem; color: var(--ink); }
+    .meta-icon { font-size: 1.15rem; flex-shrink: 0; margin-top: .05rem; }
+    .meta-label { font-size: 0.83rem; letter-spacing: .1em; color: var(--mid); margin-bottom: .15rem; }
+    .meta-value { font-size: 0.97rem; color: var(--ink); }
 
     /* Experience timeline */
     .lawyer-content {}
     .lawyer-intro-text {
-      font-size: .92rem; line-height: 2.1; color: var(--slate);
+      font-size: 1.07rem; line-height: 2.1; color: var(--slate);
       margin-bottom: 2.5rem;
     }
     .lawyer-intro-text em {
@@ -347,7 +347,7 @@
 
     .exp-section-title {
       font-family: 'Noto Serif TC', serif;
-      font-size: 1rem; font-weight: 500; letter-spacing: .1em;
+      font-size: 1.15rem; font-weight: 500; letter-spacing: .1em;
       color: var(--ink); margin-bottom: 1.5rem;
       display: flex; align-items: center; gap: .8rem;
     }
@@ -370,15 +370,15 @@
     }
     .timeline-item:first-child .timeline-dot { background: var(--gold); }
     .timeline-label {
-      font-size: .7rem; letter-spacing: .12em; color: var(--gold-lt);
+      font-size: 0.85rem; letter-spacing: .12em; color: var(--gold-lt);
       margin-bottom: .25rem;
     }
     .timeline-title {
       font-family: 'Noto Serif TC', serif;
-      font-size: .95rem; font-weight: 500; color: var(--ink);
+      font-size: 1.1rem; font-weight: 500; color: var(--ink);
       letter-spacing: .05em; margin-bottom: .2rem;
     }
-    .timeline-desc { font-size: .8rem; color: var(--mid); line-height: 1.7; }
+    .timeline-desc { font-size: 0.95rem; color: var(--mid); line-height: 1.7; }
 
     /* Certificates */
     .cert-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 3rem; }
@@ -388,19 +388,19 @@
       transition: border-color .25s, background .25s;
     }
     .cert-card:hover { border-color: var(--gold); background: var(--white); }
-    .cert-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .cert-icon { font-size: 1.75rem; flex-shrink: 0; }
     .cert-name {
-      font-family: 'Noto Serif TC', serif; font-size: .88rem;
+      font-family: 'Noto Serif TC', serif; font-size: 1.03rem;
       font-weight: 500; color: var(--ink); letter-spacing: .05em;
       margin-bottom: .25rem;
     }
-    .cert-note { font-size: .75rem; color: var(--mid); line-height: 1.6; }
+    .cert-note { font-size: 0.9rem; color: var(--mid); line-height: 1.6; }
 
     /* Expertise tags */
     .expertise-wrap { margin-bottom: 2rem; }
     .expertise-list { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
     .exp-tag {
-      font-size: .75rem; letter-spacing: .1em;
+      font-size: 0.9rem; letter-spacing: .1em;
       padding: .4rem 1rem;
       background: var(--mist); border: 1px solid var(--border);
       color: var(--slate); transition: background .2s, border-color .2s, color .2s;
@@ -417,7 +417,7 @@
     .cta-text {}
     .cta-eyebrow {
       font-family: 'Cormorant Garamond', serif; font-style: italic;
-      font-size: .9rem; color: var(--gold-lt); letter-spacing: .2em;
+      font-size: 1.05rem; color: var(--gold-lt); letter-spacing: .2em;
       display: flex; align-items: center; gap: .7rem; margin-bottom: .8rem;
     }
     .cta-eyebrow::before { content: ''; display: block; width: 20px; height: 1px; background: var(--gold-lt); }
@@ -430,13 +430,13 @@
     .cta-btns { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
     .btn-gold {
       background: var(--gold); color: var(--white);
-      padding: .9rem 2.2rem; font-size: .82rem; letter-spacing: .12em;
+      padding: .9rem 2.2rem; font-size: 0.97rem; letter-spacing: .12em;
       text-decoration: none; transition: background .2s, transform .2s;
     }
     .btn-gold:hover { background: #a08558; transform: translateY(-2px); }
     .btn-outline-white {
       border: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.7);
-      padding: .9rem 2rem; font-size: .82rem; letter-spacing: .1em;
+      padding: .9rem 2rem; font-size: 0.97rem; letter-spacing: .1em;
       text-decoration: none; transition: border-color .2s, color .2s;
     }
     .btn-outline-white:hover { border-color: var(--gold); color: var(--gold); }
@@ -448,11 +448,11 @@
       display: flex; align-items: center; justify-content: space-between;
       flex-wrap: wrap; gap: 1.5rem;
     }
-    .footer-logo { font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 500; letter-spacing: .12em; color: var(--white); }
+    .footer-logo { font-family: 'Noto Serif TC', serif; font-size: 1.15rem; font-weight: 500; letter-spacing: .12em; color: var(--white); }
     .footer-logo span { color: var(--gold); }
-    .footer-copy { font-size: .72rem; color: rgba(255,255,255,.3); letter-spacing: .08em; }
+    .footer-copy { font-size: 0.87rem; color: rgba(255,255,255,.3); letter-spacing: .08em; }
     .footer-links { display: flex; gap: 1.5rem; }
-    .footer-links a { font-size: .72rem; color: rgba(255,255,255,.4); text-decoration: none; letter-spacing: .1em; transition: color .2s; }
+    .footer-links a { font-size: 0.87rem; color: rgba(255,255,255,.4); text-decoration: none; letter-spacing: .1em; transition: color .2s; }
     .footer-links a:hover { color: var(--gold); }
 
     .float-line {
@@ -462,7 +462,7 @@
       color: var(--white);
       text-decoration: none; padding: .85rem 1.4rem .85rem 1.1rem;
       border-radius: 50px; box-shadow: 0 6px 24px rgba(6,199,85,.4);
-      font-size: .82rem; letter-spacing: .1em;
+      font-size: 0.97rem; letter-spacing: .1em;
       transition: background .2s, transform .2s, box-shadow .2s;
       white-space: nowrap;
     }
@@ -476,7 +476,7 @@
     }
     .float-line .line-icon svg { width: 1.2rem; height: 1.2rem; fill: white; }
     .float-line .line-label { line-height: 1.3; }
-    .float-line .line-label small { display: block; font-size: .68rem; opacity: .8; letter-spacing: .08em; }
+    .float-line .line-label small { display: block; font-size: 0.83rem; opacity: .8; letter-spacing: .08em; }
 
     /* ── FLOAT CALL ── */
     .float-call {
@@ -485,7 +485,7 @@
       background: var(--gold); color: var(--white);
       text-decoration: none; padding: .85rem 1.4rem .85rem 1.1rem;
       border-radius: 50px; box-shadow: 0 6px 24px rgba(184,157,110,.45);
-      font-size: .82rem; letter-spacing: .1em;
+      font-size: 0.97rem; letter-spacing: .1em;
       transition: background .2s, transform .2s, box-shadow .2s;
       white-space: nowrap;
     }
@@ -493,10 +493,10 @@
     .float-call .call-icon {
       width: 2.2rem; height: 2.2rem; background: rgba(255,255,255,.2);
       border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; animation: ring 2.5s ease infinite; flex-shrink: 0;
+      font-size: 1.15rem; animation: ring 2.5s ease infinite; flex-shrink: 0;
     }
     .float-call .call-label { line-height: 1.3; }
-    .float-call .call-label small { display: block; font-size: .68rem; opacity: .8; letter-spacing: .08em; }
+    .float-call .call-label small { display: block; font-size: 0.83rem; opacity: .8; letter-spacing: .08em; }
     @keyframes ring {
       0%,100% { transform: rotate(0); } 10% { transform: rotate(-18deg); }
       20% { transform: rotate(16deg); } 30% { transform: rotate(-12deg); }
@@ -706,7 +706,7 @@
           <span class="meta-icon">✉️</span>
           <div>
             <div class="meta-label">電子郵件</div>
-            <div class="meta-value" style="font-size:.78rem;">lawyershihtung@gmail.com</div>
+            <div class="meta-value" style="font-size: 0.93rem;">lawyershihtung@gmail.com</div>
           </div>
         </div>
       </div>
@@ -817,7 +817,7 @@
     <div class="cta-title">準備好讓我們<strong>為您守護</strong>了嗎？</div>
   </div>
   <div class="cta-btns">
-    <a href="index.html#contact" class="btn-gold">預約免費諮詢</a>
+    <a href="index.html#contact" class="btn-gold">預約付費諮詢</a>
     <a href="tel:0917551313" class="btn-outline-white">📞 立即來電</a>
   </div>
 </section>
@@ -832,6 +832,15 @@
   </div>
   <div class="footer-copy">© 2025 禹河法律事務所　保留一切權利</div>
 </footer>
+
+<a class="float-line" href="https://line.me/ti/p/yH2tuFTCBM" target="_blank" rel="noopener" aria-label="加入LINE">
+  <span class="line-icon">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.630 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.630 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+    </svg>
+  </span>
+  <span class="line-label">加入 LINE<small>點此與我們聯繫</small></span>
+</a>
 
 <!-- FLOAT CALL -->
 <a class="float-call" href="tel:0917551313">
