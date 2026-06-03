@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>最新消息｜禹河法律事務所</title>
+  <meta name="description" content="禹河法律事務所最新消息，包含法律新知、案例分享、桃園中壢法律資訊及事務所公告。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#1c1c1e;--slate:#3a3a4a;--mid:#6b6b7b;
+      --mist:#f5f4f0;--cream:#faf9f6;
+      --gold:#b89d6e;--gold-lt:#d4bc92;--white:#ffffff;
+      --border:rgba(184,157,110,0.25);
+    }
+    html{scroll-behavior:smooth;}
+    body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;height:68px;background:rgba(250,249,246,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);transition:box-shadow .3s;}
+    nav.scrolled{box-shadow:0 4px 32px rgba(28,28,30,0.08);}
+    .nav-left{display:flex;align-items:center;gap:1.2rem;}
+    .hamburger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:2rem;height:2rem;cursor:pointer;background:none;border:none;padding:0;flex-shrink:0;}
+    .hamburger span{display:block;width:100%;height:1.5px;background:var(--ink);transition:transform .3s ease,opacity .25s ease;transform-origin:center;}
+    .hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+    .hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+    .hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+    .nav-logo{font-family:'Noto Serif TC',serif;font-weight:500;font-size:1.2rem;letter-spacing:.12em;color:var(--ink);text-decoration:none;}
+    .nav-logo span{color:var(--gold);}
+    .nav-links{display:flex;gap:2.2rem;list-style:none;}
+    .nav-links a{font-size:0.95rem;letter-spacing:.1em;color:var(--slate);text-decoration:none;transition:color .2s;position:relative;}
+    .nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .25s;}
+    .nav-links a:hover,.nav-links a.active{color:var(--gold);}
+    .nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1);}
+    .nav-cta{font-size:0.95rem;letter-spacing:.1em;padding:.5rem 1.3rem;border:1px solid var(--gold);color:var(--gold);text-decoration:none;transition:background .2s,color .2s;}
+    .nav-cta:hover{background:var(--gold);color:var(--white);}
+
+    /* DROPDOWN */
+    .dropdown{position:absolute;top:68px;left:0;right:0;background:var(--white);border-top:2px solid var(--gold);box-shadow:0 12px 40px rgba(28,28,30,.13);max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);z-index:99;}
+    .dropdown.open{max-height:100vh;}
+    .dropdown-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));border-bottom:1px solid var(--border);}
+    .dd-item{border-right:1px solid var(--border);}
+    .dd-item:last-child{border-right:none;}
+    .dd-main{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.6rem;font-family:'Noto Serif TC',serif;font-size:1.1rem;letter-spacing:.08em;color:var(--slate);text-decoration:none;background:none;border:none;cursor:pointer;width:100%;text-align:left;border-bottom:2px solid transparent;transition:color .2s,border-color .2s,background .2s;}
+    .dd-main:hover{color:var(--gold);background:var(--mist);border-bottom-color:var(--gold);}
+    .dd-arrow{font-size:0.8rem;color:var(--mid);transition:transform .3s,color .3s;flex-shrink:0;margin-left:.5rem;}
+    .dd-item.expanded .dd-arrow{transform:rotate(180deg);color:var(--gold);}
+    .dd-sub{max-height:0;overflow:hidden;transition:max-height .3s ease;background:var(--mist);border-top:1px solid var(--border);}
+    .dd-item.expanded .dd-sub{max-height:400px;}
+    .dd-sub a{display:block;padding:.75rem 1.6rem .75rem 2rem;font-size:1rem;letter-spacing:.07em;color:var(--mid);text-decoration:none;border-bottom:1px solid rgba(184,157,110,.1);transition:color .2s,background .2s,padding-left .2s;}
+    .dd-sub a:last-child{border-bottom:none;}
+    .dd-sub a::before{content:"— ";color:var(--gold-lt);}
+    .dd-sub a:hover{color:var(--gold);background:rgba(184,157,110,.07);padding-left:2.3rem;}
+    .dd-footer{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.6rem;background:var(--ink);}
+    .dd-footer-text{font-size:0.9rem;letter-spacing:.1em;color:rgba(255,255,255,.5);}
+    .dd-footer-call{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--white);font-size:1rem;letter-spacing:.1em;background:var(--gold);padding:.55rem 1.2rem;transition:background .2s;}
+    .dd-footer-call:hover{background:#a08558;}
+
+    /* PAGE HERO */
+    .page-hero{padding-top:68px;background:var(--ink);position:relative;overflow:hidden;}
+    .page-hero::before{content:'消息';font-family:'Noto Serif TC',serif;font-size:clamp(8rem,16vw,16rem);font-weight:700;color:rgba(255,255,255,.04);position:absolute;right:3vw;bottom:-1rem;line-height:1;pointer-events:none;user-select:none;}
+    .page-hero-inner{padding:5rem 5vw 4.5rem;position:relative;z-index:1;}
+    .breadcrumb{display:flex;align-items:center;gap:.6rem;font-size:0.9rem;letter-spacing:.1em;color:rgba(255,255,255,.4);margin-bottom:1.4rem;}
+    .breadcrumb a{color:var(--gold-lt);text-decoration:none;transition:color .2s;}
+    .breadcrumb a:hover{color:var(--gold);}
+    .breadcrumb-sep{color:rgba(255,255,255,.25);}
+    .page-hero h1{font-family:'Noto Serif TC',serif;font-weight:300;font-size:clamp(2rem,4vw,3.4rem);letter-spacing:.1em;color:var(--white);line-height:1.3;}
+    .page-hero h1 strong{font-weight:700;color:var(--gold-lt);}
+    .page-hero-line{width:48px;height:2px;background:var(--gold);margin:1.4rem 0;}
+    .page-hero-sub{font-size:1.05rem;color:rgba(255,255,255,.55);letter-spacing:.08em;line-height:1.9;max-width:480px;}
+
+    /* FILTER BAR */
+    .filter-bar{padding:2rem 5vw;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;}
+    .filter-label{font-size:0.85rem;letter-spacing:.1em;color:var(--mid);margin-right:.4rem;}
+    .filter-btn{font-size:0.85rem;letter-spacing:.1em;padding:.45rem 1.1rem;border:1px solid var(--border);background:none;color:var(--slate);cursor:pointer;transition:background .2s,border-color .2s,color .2s;}
+    .filter-btn:hover,.filter-btn.active{background:var(--gold);border-color:var(--gold);color:var(--white);}
+
+    /* NEWS SECTION */
+    #news-section{padding:4rem 5vw 6rem;}
+
+    /* Loading / Empty */
+    .state-box{text-align:center;padding:5rem 2rem;color:var(--mid);}
+    .state-box .spinner{width:36px;height:36px;border:2px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 1.2rem;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .state-box p{font-size:1rem;letter-spacing:.08em;}
+
+    /* NEWS GRID */
+    .news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--border);}
+
+    .news-card{background:var(--cream);padding:2.4rem 2rem;position:relative;overflow:hidden;cursor:pointer;transition:background .25s,transform .25s;}
+    .news-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transition:transform .3s;}
+    .news-card:hover{background:var(--white);transform:translateY(-3px);}
+    .news-card:hover::before{transform:scaleX(1);}
+
+    .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;}
+    .card-cat{font-size:0.75rem;letter-spacing:.15em;padding:.3rem .8rem;background:var(--mist);border:1px solid var(--border);color:var(--gold);}
+    .card-date{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:var(--mid);letter-spacing:.06em;}
+    .card-title{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:500;letter-spacing:.05em;color:var(--ink);line-height:1.5;margin-bottom:.8rem;}
+    .card-summary{font-size:0.9rem;color:var(--slate);line-height:1.9;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+    .card-more{display:inline-flex;align-items:center;gap:.4rem;margin-top:1.2rem;font-size:0.8rem;letter-spacing:.12em;color:var(--gold);transition:gap .2s;}
+    .news-card:hover .card-more{gap:.7rem;}
+
+    /* MODAL */
+    .modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(28,28,30,.6);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .3s;}
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-48%);z-index:501;width:min(90vw,720px);max-height:85vh;background:var(--white);overflow-y:auto;opacity:0;transition:opacity .3s,transform .3s;}
+    .modal-overlay.open .modal{opacity:1;transform:translate(-50%,-50%);}
+    .modal-head{background:var(--ink);padding:2rem 2.4rem 1.8rem;position:sticky;top:0;z-index:1;}
+    .modal-cat{font-size:0.75rem;letter-spacing:.15em;color:var(--gold-lt);margin-bottom:.6rem;}
+    .modal-title{font-family:'Noto Serif TC',serif;font-weight:500;font-size:1.35rem;letter-spacing:.06em;color:var(--white);line-height:1.4;}
+    .modal-date{font-family:'Cormorant Garamond',serif;font-size:0.9rem;color:rgba(255,255,255,.4);margin-top:.5rem;}
+    .modal-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;cursor:pointer;font-size:1.2rem;color:rgba(255,255,255,.5);transition:color .2s;}
+    .modal-close:hover{color:var(--gold);}
+    .modal-body{padding:2.4rem;font-size:1rem;line-height:2;color:var(--slate);}
+    .modal-body p{margin-bottom:1.2rem;}
+
+    /* FLOAT BUTTONS */
+    .float-line{position:fixed;bottom:7.5rem;right:2rem;z-index:999;display:flex;align-items:center;gap:.7rem;background:#06C755;color:var(--white);text-decoration:none;padding:.85rem 1.4rem .85rem 1.1rem;border-radius:50px;box-shadow:0 6px 24px rgba(6,199,85,.4);font-size:1rem;letter-spacing:.1em;transition:background .2s,transform .2s;white-space:nowrap;}
+    .float-line:hover{background:#05a847;transform:translateY(-3px);}
+    .float-line .line-icon{width:2.2rem;height:2.2rem;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .float-line .line-icon svg{width:1.2rem;height:1.2rem;fill:white;}
+    .float-line .line-label{line-height:1.3;}
+    .float-line .line-label small{display:block;font-size:0.83rem;opacity:.8;}
+    .float-call{position:fixed;bottom:2rem;right:2rem;z-index:999;display:flex;align-items:center;gap:.7rem;background:var(--gold);color:var(--white);text-decoration:none;padding:.85rem 1.4rem .85rem 1.1rem;border-radius:50px;box-shadow:0 6px 24px rgba(184,157,110,.45);font-size:1rem;letter-spacing:.1em;transition:background .2s,transform .2s;white-space:nowrap;}
+    .float-call:hover{background:#a08558;transform:translateY(-3px);}
+    .float-call .call-icon{width:2.2rem;height:2.2rem;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1rem;animation:ring 2.5s ease infinite;flex-shrink:0;}
+    .float-call .call-label{line-height:1.3;}
+    .float-call .call-label small{display:block;font-size:0.83rem;opacity:.8;}
+    @keyframes ring{0%,100%{transform:rotate(0);}10%{transform:rotate(-18deg);}20%{transform:rotate(16deg);}30%{transform:rotate(-12deg);}40%{transform:rotate(8deg);}50%{transform:rotate(0);}}
+
+    /* FOOTER */
+    footer{background:var(--ink);padding:3rem 5vw;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;}
+    .footer-logo{font-family:'Noto Serif TC',serif;font-size:1.2rem;font-weight:500;letter-spacing:.12em;color:var(--white);}
+    .footer-logo span{color:var(--gold);}
+    .footer-copy{font-size:0.87rem;color:rgba(255,255,255,.3);letter-spacing:.08em;}
+    .footer-links{display:flex;gap:1.5rem;}
+    .footer-links a{font-size:0.87rem;color:rgba(255,255,255,.4);text-decoration:none;letter-spacing:.1em;transition:color .2s;}
+    .footer-links a:hover{color:var(--gold);}
+
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease;}
+    .reveal.visible{opacity:1;transform:none;}
+
+    @media(max-width:900px){
+      .news-grid{grid-template-columns:1fr 1fr;}
+      .nav-links{display:none;}
+    }
+    @media(max-width:560px){
+      .news-grid{grid-template-columns:1fr;}
+      .float-call .call-label,.float-line .line-label{display:none;}
+      .float-call,.float-line{padding:.85rem;border-radius:50%;}
+    }
+  </style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="nav-left">
+    <button class="hamburger" id="hamburgerBtn" aria-label="開啟選單">
+      <span></span><span></span><span></span>
+    </button>
+    <a class="nav-logo" href="index.html">禹<span>河</span>法律事務所</a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="about.html">關於我們</a></li>
+    <li><a href="news.html" class="active">最新消息</a></li>
+    <li><a href="index.html#contact">聯絡我們</a></li>
+  </ul>
+  <a class="nav-cta" href="index.html#contact">預約付費諮詢</a>
+</nav>
+
+<div class="dropdown" id="dropdown">
+  <div class="dropdown-inner">
+    <div class="dd-item"><a class="dd-main" href="about.html" data-dd-close>關於我們</a></div>
+    <div class="dd-item" id="dd-service">
+      <button class="dd-main" data-dd-toggle="dd-service">服務項目 <span class="dd-arrow">▼</span></button>
+      <div class="dd-sub">
+        <a href="index.html#services" data-dd-close>債務與契約糾紛</a>
+        <a href="index.html#services" data-dd-close>不動產與物權訴訟</a>
+        <a href="index.html#services" data-dd-close>離婚與贍養費</a>
+        <a href="index.html#services" data-dd-close>監護權與親權</a>
+        <a href="index.html#services" data-dd-close>繼承與遺產分配</a>
+        <a href="index.html#services" data-dd-close>非訟與調解</a>
+        <a href="index.html#services" data-dd-close>刑事辯護</a>
+        <a href="index.html#services" data-dd-close>行政爭訟</a>
+      </div>
+    </div>
+    <div class="dd-item"><a class="dd-main" href="news.html" data-dd-close>最新消息</a></div>
+    <div class="dd-item"><a class="dd-main" href="#" data-dd-close>成功案例</a></div>
+    <div class="dd-item"><a class="dd-main" href="#" data-dd-close>問與答</a></div>
+    <div class="dd-item" id="dd-knowledge">
+      <button class="dd-main" data-dd-toggle="dd-knowledge">法律知識 <span class="dd-arrow">▼</span></button>
+      <div class="dd-sub">
+        <a href="#" data-dd-close>民事法律常識</a>
+        <a href="#" data-dd-close>家事法律常識</a>
+        <a href="#" data-dd-close>訴訟流程說明</a>
+        <a href="#" data-dd-close>常見法律問題</a>
+      </div>
+    </div>
+    <div class="dd-item"><a class="dd-main" href="index.html#contact" data-dd-close>聯絡我們</a></div>
+  </div>
+  <div class="dd-footer">
+    <span class="dd-footer-text">禹河法律事務所</span>
+    <a class="dd-footer-call" href="tel:0917551313">📞 0917-551-313</a>
+  </div>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">首頁</a>
+      <span class="breadcrumb-sep">／</span>
+      <span>最新消息</span>
+    </div>
+    <h1>最新<strong>消息</strong></h1>
+    <div class="page-hero-line"></div>
+    <p class="page-hero-sub">法律新知、案例分析、事務所公告，提供桃園、中壢地區最即時的法律資訊。</p>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar reveal">
+  <span class="filter-label">分類：</span>
+  <button class="filter-btn active" data-cat="全部">全部</button>
+  <button class="filter-btn" data-cat="事務所公告">事務所公告</button>
+  <button class="filter-btn" data-cat="民事法律">民事法律</button>
+  <button class="filter-btn" data-cat="家事法律">家事法律</button>
+  <button class="filter-btn" data-cat="刑事法律">刑事法律</button>
+  <button class="filter-btn" data-cat="不動產法律">不動產法律</button>
+  <button class="filter-btn" data-cat="行政法律">行政法律</button>
+</div>
+
+<!-- NEWS SECTION -->
+<section id="news-section">
+  <div id="news-container">
+    <div class="state-box">
+      <div class="spinner"></div>
+      <p>載入中…</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <div class="modal-cat" id="modalCat"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-date" id="modalDate"></div>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- FLOAT -->
+<a class="float-line" href="https://line.me/ti/p/yH2tuFTCBM" target="_blank" rel="noopener">
+  <span class="line-icon"><svg viewBox="0 0 24 24"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.630 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.630 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.070 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg></span>
+  <span class="line-label">加入 LINE<small>點此與我們聯繫</small></span>
+</a>
+<a class="float-call" href="tel:0917551313">
+  <span class="call-icon">📞</span>
+  <span class="call-label">立即來電<small>0917-551-313</small></span>
+</a>
+
+<footer>
+  <div class="footer-logo">禹<span>河</span>法律事務所</div>
+  <div class="footer-links">
+    <a href="about.html">關於我們</a>
+    <a href="news.html">最新消息</a>
+    <a href="index.html#contact">聯絡我們</a>
+  </div>
+  <div class="footer-copy">© 2025 禹河法律事務所　保留一切權利</div>
+</footer>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+  import { getFirestore, collection, getDocs, query, where, orderBy }
+    from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+  // ★ 請填入您的 Firebase 設定
+  const firebaseConfig = {
+    apiKey:            "AIzaSyB2sIWbUmp2TvnDGulat2BQGb7HMYBvfA0",
+    authDomain:        "legalcasemanageer.firebaseapp.com",
+    projectId:         "legalcasemanageer",
+    storageBucket:     "legalcasemanageer.firebasestorage.app",
+    messagingSenderId: "559838504556",
+    appId:             "1:559838504556:web:ba10c071a12650bbd85a49"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  let allArticles = [];
+  let currentCat  = '全部';
+
+  // ── 讀取文章 ──
+  async function loadNews() {
+    try {
+      const q = query(
+        collection(db, 'news'),
+        where('published', '==', true),
+        orderBy('date', 'desc')
+      );
+      const snap = await getDocs(q);
+      allArticles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderNews(allArticles);
+    } catch (e) {
+      document.getElementById('news-container').innerHTML =
+        `<div class="state-box"><p>載入失敗，請稍後再試。</p></div>`;
+    }
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return `${d.getFullYear()} . ${String(d.getMonth()+1).padStart(2,'0')} . ${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function renderNews(articles) {
+    const container = document.getElementById('news-container');
+    if (!articles.length) {
+      container.innerHTML = `<div class="state-box"><p>目前尚無消息，請稍後再查看。</p></div>`;
+      return;
+    }
+    const cards = articles.map(a => `
+      <div class="news-card" data-id="${a.id}">
+        <div class="card-top">
+          <span class="card-cat">${a.category || '公告'}</span>
+          <span class="card-date">${formatDate(a.date)}</span>
+        </div>
+        <div class="card-title">${a.title}</div>
+        <div class="card-summary">${a.summary || ''}</div>
+        <div class="card-more">閱讀全文 →</div>
+      </div>`).join('');
+    container.innerHTML = `<div class="news-grid">${cards}</div>`;
+
+    container.querySelectorAll('.news-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const art = allArticles.find(a => a.id === card.dataset.id);
+        if (art) openModal(art);
+      });
+    });
+  }
+
+  // ── Modal ──
+  function openModal(art) {
+    document.getElementById('modalCat').textContent   = art.category || '';
+    document.getElementById('modalTitle').textContent = art.title;
+    document.getElementById('modalDate').textContent  = formatDate(art.date);
+    const body = (art.content || '').replace(/\n/g, '<br>');
+    document.getElementById('modalBody').innerHTML    = body;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  // ── Filter ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      const filtered = currentCat === '全部'
+        ? allArticles
+        : allArticles.filter(a => a.category === currentCat);
+      renderNews(filtered);
+    });
+  });
+
+  loadNews();
+</script>
+
+<script>
+  // Nav scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => navbar.classList.toggle('scrolled', window.scrollY > 30));
+
+  // Dropdown
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const dropdown = document.getElementById('dropdown');
+  function closeDropdown() {
+    dropdown.classList.remove('open'); hamburgerBtn.classList.remove('open'); document.body.style.overflow = '';
+    document.querySelectorAll('.dd-item.expanded').forEach(el => el.classList.remove('expanded'));
+  }
+  hamburgerBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = dropdown.classList.toggle('open');
+    hamburgerBtn.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  document.querySelectorAll('[data-dd-toggle]').forEach(btn => {
+    btn.addEventListener('click', () => document.getElementById(btn.dataset.ddToggle).classList.toggle('expanded'));
+  });
+  document.querySelectorAll('[data-dd-close]').forEach(el => el.addEventListener('click', closeDropdown));
+  document.addEventListener('click', e => { if (!dropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) closeDropdown(); });
+
+  // Reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((entry,i) => { if (entry.isIntersecting) { setTimeout(() => entry.target.classList.add('visible'), i*80); observer.unobserve(entry.target); }});
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

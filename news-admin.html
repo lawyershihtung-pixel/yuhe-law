@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>後台管理｜禹河法律事務所</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;700&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --ink:#1c1c1e;--slate:#3a3a4a;--mid:#6b6b7b;
+      --mist:#f5f4f0;--cream:#faf9f6;
+      --gold:#b89d6e;--gold-lt:#d4bc92;--white:#ffffff;
+      --border:rgba(184,157,110,0.25);
+      --red:#c0392b;--green:#27ae60;
+    }
+    body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+
+    /* ── LOGIN ── */
+    #login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--ink);}
+    .login-box{background:var(--white);padding:3rem 3.5rem;width:min(90vw,400px);}
+    .login-logo{font-family:'Noto Serif TC',serif;font-size:1.1rem;letter-spacing:.15em;color:var(--ink);text-align:center;margin-bottom:.4rem;}
+    .login-logo span{color:var(--gold);}
+    .login-sub{font-size:0.83rem;letter-spacing:.1em;color:var(--mid);text-align:center;margin-bottom:2rem;}
+    .login-box label{display:block;font-size:0.78rem;letter-spacing:.12em;color:var(--mid);margin-bottom:.4rem;margin-top:1.2rem;}
+    .login-box input{width:100%;padding:.85rem 1rem;border:1px solid var(--border);font-family:'Noto Sans TC',sans-serif;font-size:0.95rem;color:var(--ink);outline:none;transition:border-color .2s;}
+    .login-box input:focus{border-color:var(--gold);}
+    .login-btn{width:100%;margin-top:1.6rem;padding:1rem;background:var(--gold);color:var(--white);border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.95rem;letter-spacing:.12em;transition:background .2s;}
+    .login-btn:hover{background:#a08558;}
+    .login-error{font-size:0.83rem;color:var(--red);margin-top:.8rem;text-align:center;min-height:1.2em;}
+
+    /* ── ADMIN SHELL ── */
+    #admin-screen{display:none;min-height:100vh;}
+    .admin-nav{background:var(--ink);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.2);}
+    .admin-nav-logo{font-family:'Noto Serif TC',serif;font-size:1rem;letter-spacing:.12em;color:var(--white);}
+    .admin-nav-logo span{color:var(--gold);}
+    .admin-nav-right{display:flex;align-items:center;gap:1rem;}
+    .admin-badge{font-size:0.75rem;letter-spacing:.1em;color:var(--gold-lt);background:rgba(184,157,110,.12);padding:.3rem .8rem;border:1px solid rgba(184,157,110,.2);}
+    .logout-btn{font-size:0.78rem;letter-spacing:.1em;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;transition:color .2s;}
+    .logout-btn:hover{color:var(--gold);}
+
+    .admin-body{display:grid;grid-template-columns:340px 1fr;min-height:calc(100vh - 60px);}
+
+    /* SIDEBAR */
+    .sidebar{background:var(--white);border-right:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;}
+    .sidebar-title{font-family:'Noto Serif TC',serif;font-size:0.85rem;letter-spacing:.15em;color:var(--mid);padding:.5rem 0;border-bottom:1px solid var(--border);margin-bottom:.3rem;}
+    .new-btn{display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.85rem;background:var(--gold);color:var(--white);border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.9rem;letter-spacing:.1em;transition:background .2s;width:100%;}
+    .new-btn:hover{background:#a08558;}
+
+    .article-list{display:flex;flex-direction:column;gap:.5rem;overflow-y:auto;flex:1;}
+    .article-item{padding:.9rem 1rem;border:1px solid var(--border);cursor:pointer;background:var(--cream);transition:background .2s,border-color .2s;position:relative;}
+    .article-item:hover{background:var(--mist);}
+    .article-item.active{border-color:var(--gold);background:rgba(184,157,110,.07);}
+    .article-item.unpublished{opacity:.55;}
+    .ai-title{font-family:'Noto Serif TC',serif;font-size:0.9rem;font-weight:500;color:var(--ink);margin-bottom:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:1.5rem;}
+    .ai-meta{font-size:0.75rem;color:var(--mid);display:flex;align-items:center;gap:.6rem;}
+    .ai-cat{font-size:0.7rem;padding:.15rem .5rem;background:var(--mist);border:1px solid var(--border);color:var(--gold);}
+    .ai-status{font-size:0.7rem;padding:.15rem .5rem;}
+    .ai-status.pub{background:rgba(39,174,96,.1);color:var(--green);border:1px solid rgba(39,174,96,.2);}
+    .ai-status.draft{background:rgba(107,107,123,.1);color:var(--mid);border:1px solid rgba(107,107,123,.2);}
+    .ai-del{position:absolute;top:.6rem;right:.5rem;background:none;border:none;cursor:pointer;font-size:0.85rem;color:var(--mid);opacity:0;transition:opacity .2s,color .2s;}
+    .article-item:hover .ai-del{opacity:1;}
+    .ai-del:hover{color:var(--red);}
+
+    /* EDITOR */
+    .editor-panel{padding:2rem 2.5rem;background:var(--cream);}
+    .editor-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;color:var(--mid);gap:1rem;}
+    .editor-empty-icon{font-size:3rem;opacity:.3;}
+    .editor-empty p{font-size:0.9rem;letter-spacing:.1em;}
+
+    .editor-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.8rem;}
+    .editor-heading{font-family:'Noto Serif TC',serif;font-size:1.1rem;font-weight:500;letter-spacing:.08em;color:var(--ink);}
+
+    .editor-actions{display:flex;gap:.8rem;}
+    .btn-save{padding:.6rem 1.6rem;background:var(--gold);color:var(--white);border:none;cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.85rem;letter-spacing:.1em;transition:background .2s;}
+    .btn-save:hover{background:#a08558;}
+    .btn-delete{padding:.6rem 1.2rem;background:none;border:1px solid rgba(192,57,43,.3);color:var(--red);cursor:pointer;font-family:'Noto Sans TC',sans-serif;font-size:0.85rem;letter-spacing:.1em;transition:background .2s,border-color .2s;}
+    .btn-delete:hover{background:rgba(192,57,43,.08);border-color:var(--red);}
+
+    .form-group{margin-bottom:1.3rem;}
+    .form-group label{display:block;font-size:0.78rem;letter-spacing:.12em;color:var(--mid);margin-bottom:.4rem;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:.85rem 1rem;border:1px solid var(--border);background:var(--white);font-family:'Noto Sans TC',sans-serif;font-size:0.95rem;color:var(--ink);outline:none;transition:border-color .2s;resize:vertical;}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);}
+    .form-group textarea{min-height:140px;line-height:1.8;}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;align-items:end;}
+
+    .toggle-wrap{display:flex;align-items:center;gap:1rem;}
+    .toggle-label{font-size:0.85rem;color:var(--slate);}
+    .toggle{position:relative;width:46px;height:24px;}
+    .toggle input{opacity:0;width:0;height:0;}
+    .toggle-slider{position:absolute;inset:0;background:#ccc;border-radius:24px;cursor:pointer;transition:.3s;}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:white;border-radius:50%;transition:.3s;}
+    .toggle input:checked+.toggle-slider{background:var(--gold);}
+    .toggle input:checked+.toggle-slider::before{transform:translateX(22px);}
+
+    .divider{height:1px;background:var(--border);margin:1.5rem 0;}
+
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--white);padding:.8rem 1.8rem;font-size:0.85rem;letter-spacing:.1em;opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:999;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    .toast.success{background:var(--green);}
+    .toast.error{background:var(--red);}
+
+    .content-hint{font-size:0.75rem;color:var(--mid);margin-top:.4rem;line-height:1.6;}
+
+    @media(max-width:800px){
+      .admin-body{grid-template-columns:1fr;}
+      .sidebar{max-height:300px;}
+      .editor-panel{padding:1.5rem;}
+      .form-row,.form-row-3{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">禹<span>河</span>法律事務所</div>
+    <div class="login-sub">後台管理系統</div>
+    <label for="pw">管理員密碼</label>
+    <input type="password" id="pw" placeholder="請輸入密碼" autocomplete="current-password">
+    <button class="login-btn" id="loginBtn">登入</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ADMIN SCREEN -->
+<div id="admin-screen">
+  <nav class="admin-nav">
+    <div class="admin-nav-logo">禹<span>河</span>法律事務所　<span style="font-size:.75rem;opacity:.5;font-family:'Noto Sans TC'">後台管理</span></div>
+    <div class="admin-nav-right">
+      <span class="admin-badge">張世東律師</span>
+      <a href="news.html" target="_blank" style="font-size:.78rem;color:var(--gold-lt);text-decoration:none;letter-spacing:.08em;">查看前台 →</a>
+      <button class="logout-btn" id="logoutBtn">登出</button>
+    </div>
+  </nav>
+
+  <div class="admin-body">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <button class="new-btn" id="newArticleBtn">＋ 新增文章</button>
+      <div class="sidebar-title">所有文章</div>
+      <div class="article-list" id="articleList">
+        <div style="font-size:.83rem;color:var(--mid);text-align:center;padding:2rem 0;">載入中…</div>
+      </div>
+    </div>
+
+    <!-- EDITOR PANEL -->
+    <div class="editor-panel" id="editorPanel">
+      <div class="editor-empty" id="editorEmpty">
+        <div class="editor-empty-icon">✏️</div>
+        <p>點選左側文章或新增文章以開始編輯</p>
+      </div>
+
+      <div id="editorForm" style="display:none;">
+        <div class="editor-header">
+          <div class="editor-heading" id="editorHeading">新增文章</div>
+          <div class="editor-actions">
+            <button class="btn-delete" id="deleteBtn" style="display:none;">刪除文章</button>
+            <button class="btn-save" id="saveBtn">儲存發布</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>文章標題 *</label>
+          <input type="text" id="f-title" placeholder="輸入文章標題">
+        </div>
+
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>文章分類 *</label>
+            <select id="f-cat">
+              <option value="">請選擇分類</option>
+              <option>事務所公告</option>
+              <option>民事法律</option>
+              <option>家事法律</option>
+              <option>刑事法律</option>
+              <option>不動產法律</option>
+              <option>行政法律</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>發布日期 *</label>
+            <input type="date" id="f-date">
+          </div>
+          <div class="form-group">
+            <label>發布狀態</label>
+            <div class="toggle-wrap" style="padding:.85rem 0;">
+              <label class="toggle">
+                <input type="checkbox" id="f-published" checked>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label" id="pubLabel">立即發布</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>摘要（顯示於列表卡片）</label>
+          <textarea id="f-summary" placeholder="輸入一段簡短摘要，約50-100字，讓讀者快速了解文章重點" style="min-height:80px;"></textarea>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+          <label>文章內容 *</label>
+          <textarea id="f-content" placeholder="輸入完整文章內容&#10;&#10;可直接換行分段，每一段落之間空一行即可。"></textarea>
+          <div class="content-hint">提示：直接換行即可分段，文章將依照您輸入的格式顯示於前台。</div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:.8rem;margin-top:1rem;">
+          <button class="btn-delete" id="deleteBtn2" style="display:none;">刪除文章</button>
+          <button class="btn-save" id="saveBtn2">儲存發布</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+  import {
+    getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc,
+    doc, orderBy, query, Timestamp
+  } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+  // ★ 請填入您的 Firebase 設定（與其他頁面相同）
+  const firebaseConfig = {
+    apiKey:            "AIzaSyB2sIWbUmp2TvnDGulat2BQGb7HMYBvfA0",
+    authDomain:        "legalcasemanageer.firebaseapp.com",
+    projectId:         "legalcasemanageer",
+    storageBucket:     "legalcasemanageer.firebasestorage.app",
+    messagingSenderId: "559838504556",
+    appId:             "1:559838504556:web:ba10c071a12650bbd85a49"
+  };
+
+  // ★ 後台密碼（請自行修改為您想要的密碼）
+  const ADMIN_PASSWORD = 'yuhelaw2025';
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  let articles     = [];
+  let currentId    = null;
+  let isNew        = false;
+
+  // ── 登入 ──
+  const loginScreen = document.getElementById('login-screen');
+  const adminScreen = document.getElementById('admin-screen');
+
+  if (sessionStorage.getItem('yuhe_admin') === 'ok') showAdmin();
+
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  document.getElementById('pw').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+
+  function doLogin() {
+    const val = document.getElementById('pw').value;
+    if (val === ADMIN_PASSWORD) {
+      sessionStorage.setItem('yuhe_admin', 'ok');
+      showAdmin();
+    } else {
+      document.getElementById('loginError').textContent = '密碼錯誤，請再試一次。';
+      document.getElementById('pw').value = '';
+    }
+  }
+  function showAdmin() {
+    loginScreen.style.display = 'none';
+    adminScreen.style.display = 'block';
+    loadArticles();
+  }
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    sessionStorage.removeItem('yuhe_admin');
+    location.reload();
+  });
+
+  // ── 讀取文章 ──
+  async function loadArticles() {
+    try {
+      const q = query(collection(db, 'news'), orderBy('date', 'desc'));
+      const snap = await getDocs(q);
+      articles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderList();
+    } catch(e) {
+      showToast('讀取失敗：' + e.message, 'error');
+    }
+  }
+
+  function formatDateStr(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  }
+  function formatDateDisplay(ts) {
+    if (!ts) return '';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return `${d.getFullYear()} . ${String(d.getMonth()+1).padStart(2,'0')} . ${String(d.getDate()).padStart(2,'0')}`;
+  }
+
+  function renderList() {
+    const list = document.getElementById('articleList');
+    if (!articles.length) {
+      list.innerHTML = '<div style="font-size:.83rem;color:var(--mid);text-align:center;padding:2rem 0;">尚無文章</div>';
+      return;
+    }
+    list.innerHTML = articles.map(a => `
+      <div class="article-item ${a.published ? '' : 'unpublished'} ${a.id === currentId ? 'active' : ''}" data-id="${a.id}">
+        <div class="ai-title">${a.title}</div>
+        <div class="ai-meta">
+          <span class="ai-cat">${a.category || '未分類'}</span>
+          <span class="ai-status ${a.published ? 'pub' : 'draft'}">${a.published ? '已發布' : '草稿'}</span>
+          <span>${formatDateDisplay(a.date)}</span>
+        </div>
+        <button class="ai-del" data-id="${a.id}" title="刪除">✕</button>
+      </div>`).join('');
+
+    list.querySelectorAll('.article-item').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target.classList.contains('ai-del')) return;
+        loadEditor(el.dataset.id);
+      });
+    });
+    list.querySelectorAll('.ai-del').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); confirmDelete(btn.dataset.id); });
+    });
+  }
+
+  // ── 編輯器 ──
+  document.getElementById('newArticleBtn').addEventListener('click', () => {
+    currentId = null; isNew = true;
+    showEditor();
+    document.getElementById('f-title').value   = '';
+    document.getElementById('f-cat').value     = '';
+    document.getElementById('f-date').value    = new Date().toISOString().slice(0,10);
+    document.getElementById('f-summary').value = '';
+    document.getElementById('f-content').value = '';
+    document.getElementById('f-published').checked = true;
+    updatePubLabel();
+    document.getElementById('editorHeading').textContent = '新增文章';
+    document.getElementById('deleteBtn').style.display   = 'none';
+    document.getElementById('deleteBtn2').style.display  = 'none';
+    renderList();
+  });
+
+  function loadEditor(id) {
+    currentId = id; isNew = false;
+    const art = articles.find(a => a.id === id);
+    if (!art) return;
+    showEditor();
+    document.getElementById('f-title').value      = art.title || '';
+    document.getElementById('f-cat').value        = art.category || '';
+    document.getElementById('f-date').value       = formatDateStr(art.date);
+    document.getElementById('f-summary').value    = art.summary || '';
+    document.getElementById('f-content').value    = art.content || '';
+    document.getElementById('f-published').checked = !!art.published;
+    updatePubLabel();
+    document.getElementById('editorHeading').textContent = '編輯文章';
+    document.getElementById('deleteBtn').style.display   = 'inline-block';
+    document.getElementById('deleteBtn2').style.display  = 'inline-block';
+    renderList();
+  }
+
+  function showEditor() {
+    document.getElementById('editorEmpty').style.display = 'none';
+    document.getElementById('editorForm').style.display  = 'block';
+  }
+
+  document.getElementById('f-published').addEventListener('change', updatePubLabel);
+  function updatePubLabel() {
+    document.getElementById('pubLabel').textContent =
+      document.getElementById('f-published').checked ? '立即發布' : '儲存為草稿';
+  }
+
+  // ── 儲存 ──
+  async function saveArticle() {
+    const title   = document.getElementById('f-title').value.trim();
+    const cat     = document.getElementById('f-cat').value;
+    const dateVal = document.getElementById('f-date').value;
+    const summary = document.getElementById('f-summary').value.trim();
+    const content = document.getElementById('f-content').value.trim();
+    const pub     = document.getElementById('f-published').checked;
+
+    if (!title || !cat || !dateVal || !content) {
+      showToast('請填寫標題、分類、日期及內容', 'error'); return;
+    }
+
+    const dateTs = Timestamp.fromDate(new Date(dateVal));
+    const data   = { title, category: cat, date: dateTs, summary, content, published: pub, updatedAt: Timestamp.now() };
+
+    try {
+      if (isNew) {
+        data.createdAt = Timestamp.now();
+        const ref = await addDoc(collection(db, 'news'), data);
+        currentId = ref.id; isNew = false;
+        showToast('文章已新增！', 'success');
+      } else {
+        await updateDoc(doc(db, 'news', currentId), data);
+        showToast('儲存成功！', 'success');
+      }
+      await loadArticles();
+      document.getElementById('deleteBtn').style.display  = 'inline-block';
+      document.getElementById('deleteBtn2').style.display = 'inline-block';
+      document.getElementById('editorHeading').textContent = '編輯文章';
+    } catch(e) {
+      showToast('儲存失敗：' + e.message, 'error');
+    }
+  }
+
+  document.getElementById('saveBtn').addEventListener('click',  saveArticle);
+  document.getElementById('saveBtn2').addEventListener('click', saveArticle);
+
+  // ── 刪除 ──
+  async function confirmDelete(id) {
+    if (!confirm('確定要刪除這篇文章嗎？此操作無法復原。')) return;
+    try {
+      await deleteDoc(doc(db, 'news', id));
+      if (currentId === id) {
+        currentId = null;
+        document.getElementById('editorEmpty').style.display = 'flex';
+        document.getElementById('editorForm').style.display  = 'none';
+      }
+      showToast('文章已刪除', 'success');
+      await loadArticles();
+    } catch(e) {
+      showToast('刪除失敗：' + e.message, 'error');
+    }
+  }
+
+  document.getElementById('deleteBtn').addEventListener('click',  () => confirmDelete(currentId));
+  document.getElementById('deleteBtn2').addEventListener('click', () => confirmDelete(currentId));
+
+  // ── Toast ──
+  function showToast(msg, type='') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+</script>
+</body>
+</html>
