@@ -123,7 +123,9 @@
   <div class="login-box">
     <div class="login-logo">禹<span>河</span>法律事務所</div>
     <div class="login-sub">後台管理系統</div>
-    <label for="pw">管理員密碼</label>
+    <label for="email">管理員帳號</label>
+    <input type="email" id="email" placeholder="請輸入 Email" autocomplete="username">
+    <label for="pw" style="margin-top:.6rem;">管理員密碼</label>
     <input type="password" id="pw" placeholder="請輸入密碼" autocomplete="current-password">
     <button class="login-btn" id="loginBtn">登入</button>
     <div class="login-error" id="loginError"></div>
@@ -232,6 +234,9 @@
     getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc,
     doc, orderBy, query, Timestamp
   } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
 
   // ★ 請填入您的 Firebase 設定（與其他頁面相同）
   const firebaseConfig = {
@@ -243,44 +248,60 @@
     appId:             "YOUR_APP_ID"
   };
 
-  // ★ 後台密碼（請自行修改為您想要的密碼）
-  const ADMIN_PASSWORD = 'yuhelaw2025';
-
-  const app = initializeApp(firebaseConfig);
-  const db  = getFirestore(app);
+  const app  = initializeApp(firebaseConfig);
+  const db   = getFirestore(app);
+  const auth = getAuth(app);
 
   let articles     = [];
   let currentId    = null;
   let isNew        = false;
 
-  // ── 登入 ──
+  // ── 登入（Firebase Authentication）──
   const loginScreen = document.getElementById('login-screen');
   const adminScreen = document.getElementById('admin-screen');
+  let   loaded      = false;
 
-  if (sessionStorage.getItem('yuhe_admin') === 'ok') showAdmin();
+  // 由 Firebase 的登入狀態決定畫面，這是真正的權限關卡。
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      loginScreen.style.display = 'none';
+      adminScreen.style.display = 'block';
+      if (!loaded) { loaded = true; loadArticles(); }
+    } else {
+      loaded = false;
+      adminScreen.style.display = 'none';
+      loginScreen.style.display = 'flex';
+    }
+  });
 
   document.getElementById('loginBtn').addEventListener('click', doLogin);
-  document.getElementById('pw').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
+  document.getElementById('pw').addEventListener('keydown',    e => { if (e.key==='Enter') doLogin(); });
+  document.getElementById('email').addEventListener('keydown', e => { if (e.key==='Enter') doLogin(); });
 
-  function doLogin() {
-    const val = document.getElementById('pw').value;
-    if (val === ADMIN_PASSWORD) {
-      sessionStorage.setItem('yuhe_admin', 'ok');
-      showAdmin();
-    } else {
-      document.getElementById('loginError').textContent = '密碼錯誤，請再試一次。';
+  async function doLogin() {
+    const email = document.getElementById('email').value.trim();
+    const pw    = document.getElementById('pw').value;
+    const errEl = document.getElementById('loginError');
+    errEl.textContent = '';
+    if (!email || !pw) { errEl.textContent = '請輸入帳號與密碼。'; return; }
+    try {
+      await signInWithEmailAndPassword(auth, email, pw);
+      // 登入成功後由 onAuthStateChanged 切換畫面。
+      document.getElementById('pw').value = '';
+    } catch (e) {
+      const map = {
+        'auth/invalid-email':        'Email 格式不正確。',
+        'auth/user-not-found':       '帳號或密碼錯誤。',
+        'auth/wrong-password':       '帳號或密碼錯誤。',
+        'auth/invalid-credential':   '帳號或密碼錯誤。',
+        'auth/too-many-requests':    '嘗試次數過多，請稍後再試。'
+      };
+      errEl.textContent = map[e.code] || ('登入失敗：' + e.message);
       document.getElementById('pw').value = '';
     }
   }
-  function showAdmin() {
-    loginScreen.style.display = 'none';
-    adminScreen.style.display = 'block';
-    loadArticles();
-  }
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    sessionStorage.removeItem('yuhe_admin');
-    location.reload();
-  });
+
+  document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
 
   // ── 讀取文章 ──
   async function loadArticles() {

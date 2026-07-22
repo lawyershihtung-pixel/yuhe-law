@@ -1,0 +1,27 @@
+rules_version = '2';
+
+// 禹河法律事務所 — Firestore 安全規則
+//
+// 部署方式（擇一）:
+//   A. Firebase 主控台 → Firestore Database → 規則(Rules)分頁,
+//      把整段貼上後按「發布(Publish)」。
+//   B. 使用 Firebase CLI: `firebase deploy --only firestore:rules`
+//
+// 核心原則:
+//   - news(前台新聞): 任何人都可讀,只有「已登入的管理員」可以新增/修改/刪除。
+//   - 其他所有集合: 一律禁止,避免資料庫其他部分被公開存取。
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 前台新聞:公開可讀,僅登入者可寫
+    match /news/{docId} {
+      allow read:  if true;
+      allow write: if request.auth != null;
+    }
+
+    // 預設拒絕其餘所有存取
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
