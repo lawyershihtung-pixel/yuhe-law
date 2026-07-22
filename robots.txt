@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lawyershihtung-pixel.github.io/yuhe-law/sitemap.xml
