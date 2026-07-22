@@ -303,15 +303,18 @@
   // ── 讀取文章 ──
   async function loadNews() {
     try {
+      // 只用日期排序抓回(單一欄位,免複合索引),再於前端過濾出已發布文章。
       const q = query(
         collection(db, 'news'),
-        where('published', '==', true),
         orderBy('date', 'desc')
       );
       const snap = await getDocs(q);
-      allArticles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allArticles = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(a => a.published === true);
       renderNews(allArticles);
     } catch (e) {
+      console.error('讀取新聞失敗：', e);
       document.getElementById('news-container').innerHTML =
         `<div class="state-box"><p>載入失敗，請稍後再試。</p></div>`;
     }
