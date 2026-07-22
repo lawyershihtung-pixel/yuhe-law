@@ -326,6 +326,13 @@
     return `${d.getFullYear()} . ${String(d.getMonth()+1).padStart(2,'0')} . ${String(d.getDate()).padStart(2,'0')}`;
   }
 
+  // 將文字中的 HTML 特殊字元跳脫,避免文章內容夾帶的標籤/程式碼被當成 HTML 執行(防止儲存型 XSS)。
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function renderList() {
     const list = document.getElementById('articleList');
     if (!articles.length) {
@@ -334,9 +341,9 @@
     }
     list.innerHTML = articles.map(a => `
       <div class="article-item ${a.published ? '' : 'unpublished'} ${a.id === currentId ? 'active' : ''}" data-id="${a.id}">
-        <div class="ai-title">${a.title}</div>
+        <div class="ai-title">${escapeHtml(a.title)}</div>
         <div class="ai-meta">
-          <span class="ai-cat">${a.category || '未分類'}</span>
+          <span class="ai-cat">${escapeHtml(a.category || '未分類')}</span>
           <span class="ai-status ${a.published ? 'pub' : 'draft'}">${a.published ? '已發布' : '草稿'}</span>
           <span>${formatDateDisplay(a.date)}</span>
         </div>

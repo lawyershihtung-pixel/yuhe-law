@@ -13,9 +13,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // 前台新聞:公開可讀,僅登入者可寫
+    // 前台新聞:
+    //   - 已發布(published==true)的文章任何人可讀
+    //   - 未發布的草稿只有登入的管理員可讀(外部 API 也讀不到)
+    //   - 只有登入的管理員可新增/修改/刪除
     match /news/{docId} {
-      allow read:  if true;
+      allow read:  if resource.data.published == true || request.auth != null;
       allow write: if request.auth != null;
     }
 

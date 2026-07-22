@@ -303,15 +303,15 @@
   // ── 讀取文章 ──
   async function loadNews() {
     try {
-      // 只用日期排序抓回(單一欄位,免複合索引),再於前端過濾出已發布文章。
+      // 只向資料庫要「已發布」文章:草稿(published=false)不會離開伺服器,
+      // 配合 Firestore 規則,外部無法讀取未發布內容。
       const q = query(
         collection(db, 'news'),
+        where('published', '==', true),
         orderBy('date', 'desc')
       );
       const snap = await getDocs(q);
-      allArticles = snap.docs
-        .map(d => ({ id: d.id, ...d.data() }))
-        .filter(a => a.published === true);
+      allArticles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderNews(allArticles);
     } catch (e) {
       console.error('讀取新聞失敗：', e);
@@ -326,6 +326,13 @@
     return `${d.getFullYear()} . ${String(d.getMonth()+1).padStart(2,'0')} . ${String(d.getDate()).padStart(2,'0')}`;
   }
 
+  // 將文字中的 HTML 特殊字元跳脫,避免文章內容夾帶的標籤/程式碼被當成 HTML 執行(防止儲存型 XSS)。
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
   function renderNews(articles) {
     const container = document.getElementById('news-container');
     if (!articles.length) {
@@ -335,11 +342,11 @@
     const cards = articles.map(a => `
       <div class="news-card" data-id="${a.id}">
         <div class="card-top">
-          <span class="card-cat">${a.category || '公告'}</span>
+          <span class="card-cat">${escapeHtml(a.category || '公告')}</span>
           <span class="card-date">${formatDate(a.date)}</span>
         </div>
-        <div class="card-title">${a.title}</div>
-        <div class="card-summary">${a.summary || ''}</div>
+        <div class="card-title">${escapeHtml(a.title)}</div>
+        <div class="card-summary">${escapeHtml(a.summary || '')}</div>
         <div class="card-more">閱讀全文 →</div>
       </div>`).join('');
     container.innerHTML = `<div class="news-grid">${cards}</div>`;
@@ -357,7 +364,7 @@
     document.getElementById('modalCat').textContent   = art.category || '';
     document.getElementById('modalTitle').textContent = art.title;
     document.getElementById('modalDate').textContent  = formatDate(art.date);
-    const body = (art.content || '').replace(/\n/g, '<br>');
+    const body = escapeHtml(art.content || '').replace(/\n/g, '<br>');
     document.getElementById('modalBody').innerHTML    = body;
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
