@@ -17,8 +17,12 @@ service cloud.firestore {
     //   - 已發布(published==true)的文章任何人可讀
     //   - 未發布的草稿只有登入的管理員可讀(外部 API 也讀不到)
     //   - 只有登入的管理員可新增/修改/刪除
+    // 注意:兩條 read 規則要「分開寫」。若把 published 與 auth 併成
+    //       `published==true || auth != null` 同一式,Firestore 對未登入
+    //       的列表查詢會保守地整條拒絕,導致前台讀取失敗。
     match /news/{docId} {
-      allow read:  if resource.data.published == true || request.auth != null;
+      allow read:  if resource.data.published == true;  // 已發布:任何人可讀
+      allow read:  if request.auth != null;             // 登入的管理員:可讀全部(含草稿)
       allow write: if request.auth != null;
     }
 

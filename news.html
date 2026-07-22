@@ -300,18 +300,28 @@
   let allArticles = [];
   let currentCat  = '全部';
 
+  // 把 Firestore 時間戳(或一般日期)轉成毫秒,供前端排序使用。
+  function tsMillis(ts) {
+    if (!ts) return 0;
+    if (typeof ts.toMillis === 'function') return ts.toMillis();
+    if (typeof ts.seconds === 'number') return ts.seconds * 1000;
+    return new Date(ts).getTime() || 0;
+  }
+
   // ── 讀取文章 ──
   async function loadNews() {
     try {
-      // 只向資料庫要「已發布」文章:草稿(published=false)不會離開伺服器,
-      // 配合 Firestore 規則,外部無法讀取未發布內容。
+      // 只向資料庫要「已發布」文章(單一等值條件,免複合索引):
+      // 草稿(published=false)不會離開伺服器,配合 Firestore 規則,外部無法讀取未發布內容。
+      // 日期排序改在前端處理。
       const q = query(
         collection(db, 'news'),
-        where('published', '==', true),
-        orderBy('date', 'desc')
+        where('published', '==', true)
       );
       const snap = await getDocs(q);
-      allArticles = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      allArticles = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => tsMillis(b.date) - tsMillis(a.date));
       renderNews(allArticles);
     } catch (e) {
       console.error('讀取新聞失敗：', e);
