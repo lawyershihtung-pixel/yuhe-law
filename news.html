@@ -44,7 +44,7 @@
     .nav-cta:hover{background:var(--gold);color:var(--white);}
 
     /* DROPDOWN */
-    .dropdown{position:absolute;top:68px;left:0;right:0;background:var(--white);border-top:2px solid var(--gold);box-shadow:0 12px 40px rgba(28,28,30,.13);max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);z-index:99;}
+    .dropdown{position:fixed;top:68px;left:0;right:0;background:var(--white);border-top:2px solid var(--gold);box-shadow:0 12px 40px rgba(28,28,30,.13);max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.4,0,.2,1);z-index:99;}
     .dropdown.open{max-height:100vh;}
     .dropdown-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));border-bottom:1px solid var(--border);}
     .dd-item{border-right:1px solid var(--border);}
