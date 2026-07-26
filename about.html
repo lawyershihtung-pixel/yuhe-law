@@ -538,6 +538,55 @@
       .float-call .call-icon { margin: 0; }
     }
   </style>
+<style>
+/* ============ SORATO 天空風(全站主題) ============ */
+:root{
+  --ink:     #0f1e33;   /* 深夜藍(呼應天空主題) */
+  --slate:   #274063;
+  --gold:    #1f8fe0;   /* 天空藍(強調色) */
+  --gold-lt: #7ec8f0;
+  --cream:   #ffffff;
+  --mist:    #eef6fd;
+  --border:  rgba(31,143,224,0.18);
+}
+body{ font-family:'Noto Sans TC',sans-serif; }
+
+/* 標題:粗體無襯線,現代有力 */
+.hero-title,.section-title,.page-hero h1{
+  font-family:'Noto Sans TC',sans-serif; font-weight:900; letter-spacing:-.01em;
+}
+
+/* 首頁 Hero:天空漸層 */
+.hero-bg{
+  background:linear-gradient(155deg,#eaf5fe 0%, #c3e5f8 48%, #8fcdf0 100%) !important;
+  opacity:1 !important;
+}
+/* 內頁 Hero(關於我們 / 最新消息):深藍漸層(夜空) */
+.page-hero{
+  background:linear-gradient(150deg,#0f1e33 0%, #1b3a63 60%, #2a6bb0 100%) !important;
+}
+
+/* 按鈕 / CTA:天空漸層膠囊,白字 */
+.btn-primary,.form-submit{
+  background:linear-gradient(90deg,#2b8fe0,#5cc0ea) !important;
+  color:#fff !important; border:none; border-radius:999px; font-weight:700;
+}
+.nav-cta{
+  background:linear-gradient(90deg,#2b8fe0,#5cc0ea); color:#fff !important;
+  border:none; border-radius:999px; padding:.55rem 1.5rem; font-weight:700;
+}
+.btn-ghost,.btn-outline-white{ border-radius:999px; }
+
+/* 圓圈 / 來電鈕:內容白字 */
+.step-circle{ color:#fff; }
+.float-call,.dd-footer-call{ color:#fff !important; }
+
+/* 服務標籤:淡藍膠囊 */
+.tag{
+  background:rgba(31,143,224,0.10); color:#1c6fb0;
+  border:none; border-radius:999px; font-weight:600; letter-spacing:.04em;
+}
+</style>
 </head>
 <body>
 
