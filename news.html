@@ -213,6 +213,10 @@ body{ font-family:'Noto Sans TC',sans-serif; }
 .card-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; display:block; margin-bottom:1rem; }
 .card-pin{ display:inline-block; background:var(--gold); color:#fff; font-size:.7rem; padding:1px 9px; border-radius:999px; margin-right:.45rem; vertical-align:middle; font-weight:600; }
 </style>
+<style>
+.modal-share{ display:inline-flex; align-items:center; gap:.4rem; margin-top:.6rem; padding:.4rem .9rem; font-size:.82rem; border:1px solid var(--gold); color:var(--gold); background:none; border-radius:999px; cursor:pointer; letter-spacing:.03em; }
+.modal-share:hover{ background:var(--gold); color:#fff; }
+</style>
 </head>
 <body>
 
@@ -300,6 +304,7 @@ body{ font-family:'Noto Sans TC',sans-serif; }
       <div class="modal-cat" id="modalCat"></div>
       <div class="modal-title" id="modalTitle"></div>
       <div class="modal-date" id="modalDate"></div>
+      <button class="modal-share" id="modalShare" type="button">🔗 複製連結</button>
       <button class="modal-close" id="modalClose">✕</button>
     </div>
     <div class="modal-body" id="modalBody"></div>
@@ -376,6 +381,7 @@ body{ font-family:'Noto Sans TC',sans-serif; }
           return ob - oa;
         });
       renderNews(allArticles);
+      openFromUrl();
     } catch (e) {
       console.error('讀取新聞失敗：', e);
       document.getElementById('news-container').innerHTML =
@@ -424,7 +430,9 @@ body{ font-family:'Noto Sans TC',sans-serif; }
   }
 
   // ── Modal ──
-  function openModal(art) {
+  let currentArt = null;
+  function openModal(art, fromUrl) {
+    currentArt = art;
     document.getElementById('modalCat').textContent   = art.category || '';
     document.getElementById('modalTitle').textContent = art.title;
     document.getElementById('modalDate').textContent  = formatDate(art.date);
@@ -436,14 +444,51 @@ body{ font-family:'Noto Sans TC',sans-serif; }
     document.getElementById('modalBody').innerHTML    = coverHtml + body;
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    document.title = art.title + '｜最新消息｜禹河法律事務所';
+    if (!fromUrl) history.pushState({ id: art.id }, '', '?id=' + encodeURIComponent(art.id));
   }
   function closeModal() {
     document.getElementById('modalOverlay').classList.remove('open');
     document.body.style.overflow = '';
+    currentArt = null;
+    document.title = '最新消息｜禹河法律事務所';
+    if (location.search) history.pushState({}, '', location.pathname);
   }
   document.getElementById('modalClose').addEventListener('click', closeModal);
   document.getElementById('modalOverlay').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeModal();
+  });
+
+  // 複製本篇專屬連結
+  document.getElementById('modalShare').addEventListener('click', () => {
+    if (!currentArt) return;
+    const url = location.origin + location.pathname + '?id=' + encodeURIComponent(currentArt.id);
+    const btn = document.getElementById('modalShare');
+    const done = () => { btn.textContent = '✓ 已複製連結'; setTimeout(() => { btn.textContent = '🔗 複製連結'; }, 2000); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done).catch(() => prompt('複製此連結：', url));
+    } else { prompt('複製此連結：', url); }
+  });
+
+  // 依網址 ?id= 開啟指定文章
+  function openFromUrl() {
+    const id = new URLSearchParams(location.search).get('id');
+    if (!id) return;
+    const art = allArticles.find(a => a.id === id);
+    if (art) openModal(art, true);
+  }
+
+  // 瀏覽器上一頁/下一頁
+  window.addEventListener('popstate', () => {
+    const id = new URLSearchParams(location.search).get('id');
+    if (id) {
+      const art = allArticles.find(a => a.id === id);
+      if (art) { openModal(art, true); return; }
+    }
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentArt = null;
+    document.title = '最新消息｜禹河法律事務所';
   });
 
   // ── Filter ──
