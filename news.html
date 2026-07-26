@@ -206,6 +206,12 @@ body{ font-family:'Noto Sans TC',sans-serif; }
   border:none; border-radius:999px; font-weight:600; letter-spacing:.04em;
 }
 </style>
+<style>
+/* 文章圖片 */
+.article-cover{ width:100%; border-radius:12px; margin:0 0 1.4rem; display:block; }
+.article-img{ max-width:100%; height:auto; border-radius:10px; margin:1.1rem auto; display:block; }
+.card-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; display:block; margin-bottom:1rem; }
+</style>
 </head>
 <body>
 
@@ -392,6 +398,7 @@ body{ font-family:'Noto Sans TC',sans-serif; }
     }
     const cards = articles.map(a => `
       <div class="news-card" data-id="${a.id}">
+        ${a.cover ? `<img class="card-thumb" src="${a.cover}" alt="">` : ''}
         <div class="card-top">
           <span class="card-cat">${escapeHtml(a.category || '公告')}</span>
           <span class="card-date">${formatDate(a.date)}</span>
@@ -415,8 +422,12 @@ body{ font-family:'Noto Sans TC',sans-serif; }
     document.getElementById('modalCat').textContent   = art.category || '';
     document.getElementById('modalTitle').textContent = art.title;
     document.getElementById('modalDate').textContent  = formatDate(art.date);
-    const body = escapeHtml(art.content || '').replace(/\n/g, '<br>');
-    document.getElementById('modalBody').innerHTML    = body;
+    let body = escapeHtml(art.content || '').replace(/\n/g, '<br>');
+    (art.images || []).forEach(img => {
+      body = body.split('[[' + img.token + ']]').join(`<img class="article-img" src="${img.data}" alt="">`);
+    });
+    const coverHtml = art.cover ? `<img class="article-cover" src="${art.cover}" alt="">` : '';
+    document.getElementById('modalBody').innerHTML    = coverHtml + body;
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }

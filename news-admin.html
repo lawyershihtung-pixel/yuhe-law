@@ -114,7 +114,14 @@
       .editor-panel{padding:1.5rem;}
       .form-row,.form-row-3{grid-template-columns:1fr;}
     }
-  </style>
+      .btn-img{ display:inline-block; padding:.5rem 1rem; font-size:.85rem; border:1px solid var(--gold); color:var(--gold); background:none; border-radius:6px; cursor:pointer; letter-spacing:.05em; }
+    .btn-img:hover{ background:var(--gold); color:#fff; }
+    .btn-img-remove{ display:inline-block; padding:.5rem 1rem; font-size:.85rem; border:1px solid #c0392b; color:#c0392b; background:none; border-radius:6px; cursor:pointer; margin-left:.5rem; }
+    .img-thumb{ position:relative; display:inline-block; }
+    .img-thumb img{ width:92px; height:92px; object-fit:cover; border-radius:8px; border:1px solid var(--border); display:block; }
+    .img-thumb .lbl{ position:absolute; left:4px; top:4px; background:rgba(0,0,0,.6); color:#fff; font-size:.68rem; padding:1px 6px; border-radius:4px; }
+    .img-thumb .del{ position:absolute; right:2px; top:2px; width:20px; height:20px; border-radius:50%; background:#c0392b; color:#fff; border:none; cursor:pointer; font-size:.85rem; line-height:1; }
+</style>
 </head>
 <body>
 
@@ -208,12 +215,34 @@
           <textarea id="f-summary" placeholder="輸入一段簡短摘要，約50-100字，讓讀者快速了解文章重點" style="min-height:80px;"></textarea>
         </div>
 
+        <div class="form-group">
+          <label>封面圖（顯示於列表縮圖與文章頂部，選填）</label>
+          <div>
+            <input type="file" id="f-cover" accept="image/*" style="display:none">
+            <button type="button" class="btn-img" id="coverBtn">選擇封面圖</button>
+            <button type="button" class="btn-img-remove" id="coverRemove" style="display:none">移除封面</button>
+          </div>
+          <div id="coverWrap" style="margin-top:.7rem;display:none">
+            <img id="coverPreview" style="max-width:240px;border-radius:8px;border:1px solid var(--border);display:block">
+          </div>
+        </div>
+
         <div class="divider"></div>
 
         <div class="form-group">
           <label>文章內容 *</label>
           <textarea id="f-content" placeholder="輸入完整文章內容&#10;&#10;可直接換行分段，每一段落之間空一行即可。"></textarea>
           <div class="content-hint">提示：直接換行即可分段，文章將依照您輸入的格式顯示於前台。</div>
+        </div>
+
+        <div class="form-group">
+          <label>內文插圖（選填）</label>
+          <div>
+            <input type="file" id="f-inline" accept="image/*" style="display:none">
+            <button type="button" class="btn-img" id="inlineBtn">＋ 在內文游標處插入圖片</button>
+          </div>
+          <div class="content-hint">會在上方內文的游標位置插入像 <b>[[圖1]]</b> 的標記，前台會顯示成對應圖片；刪除下方縮圖會一併移除標記。</div>
+          <div id="inlineGallery" style="display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.7rem"></div>
         </div>
 
         <div style="display:flex;justify-content:flex-end;gap:.8rem;margin-top:1rem;">
@@ -255,6 +284,8 @@
   let articles     = [];
   let currentId    = null;
   let isNew        = false;
+  let coverData    = '';
+  let inlineImages = [];
 
   // ── 登入（Firebase Authentication）──
   const loginScreen = document.getElementById('login-screen');
@@ -371,6 +402,7 @@
     document.getElementById('f-summary').value = '';
     document.getElementById('f-content').value = '';
     document.getElementById('f-published').checked = true;
+    coverData=''; inlineImages=[]; renderCover(); renderInlineGallery();
     updatePubLabel();
     document.getElementById('editorHeading').textContent = '新增文章';
     document.getElementById('deleteBtn').style.display   = 'none';
@@ -388,6 +420,9 @@
     document.getElementById('f-date').value       = formatDateStr(art.date);
     document.getElementById('f-summary').value    = art.summary || '';
     document.getElementById('f-content').value    = art.content || '';
+    coverData = art.cover || '';
+    inlineImages = Array.isArray(art.images) ? art.images.slice() : [];
+    renderCover(); renderInlineGallery();
     document.getElementById('f-published').checked = !!art.published;
     updatePubLabel();
     document.getElementById('editorHeading').textContent = '編輯文章';
@@ -408,6 +443,79 @@
   }
 
   // ── 儲存 ──
+  // ── 圖片:壓縮、封面、內文插圖 ──
+  function compressImage(file, maxW, quality){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const im = new Image();
+        im.onload = () => {
+          const scale = Math.min(1, maxW / im.width);
+          const w = Math.round(im.width * scale), h = Math.round(im.height * scale);
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          c.getContext('2d').drawImage(im, 0, 0, w, h);
+          resolve(c.toDataURL('image/jpeg', quality));
+        };
+        im.onerror = reject;
+        im.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  const fCover = document.getElementById('f-cover');
+  document.getElementById('coverBtn').addEventListener('click', () => fCover.click());
+  document.getElementById('coverRemove').addEventListener('click', () => { coverData=''; renderCover(); });
+  fCover.addEventListener('change', async () => {
+    if (!fCover.files[0]) return;
+    coverData = await compressImage(fCover.files[0], 1000, 0.72);
+    fCover.value = ''; renderCover();
+  });
+  function renderCover(){
+    const wrap = document.getElementById('coverWrap');
+    if (coverData){ document.getElementById('coverPreview').src = coverData; wrap.style.display='block'; document.getElementById('coverRemove').style.display='inline-block'; }
+    else { wrap.style.display='none'; document.getElementById('coverRemove').style.display='none'; }
+  }
+
+  const fInline = document.getElementById('f-inline');
+  document.getElementById('inlineBtn').addEventListener('click', () => fInline.click());
+  fInline.addEventListener('change', async () => {
+    if (!fInline.files[0]) return;
+    const data = await compressImage(fInline.files[0], 1000, 0.72);
+    fInline.value = '';
+    let mx = 0;
+    inlineImages.forEach(im => { const n = parseInt(im.token.replace('圖',''),10); if(n>mx) mx=n; });
+    const token = '圖' + (mx + 1);
+    inlineImages.push({ token, data });
+    insertAtCursor('f-content', '[[' + token + ']]');
+    renderInlineGallery();
+  });
+  function insertAtCursor(id, text){
+    const ta = document.getElementById(id);
+    const s = ta.selectionStart != null ? ta.selectionStart : ta.value.length;
+    const e = ta.selectionEnd   != null ? ta.selectionEnd   : ta.value.length;
+    ta.value = ta.value.slice(0,s) + text + ta.value.slice(e);
+    ta.focus(); ta.selectionStart = ta.selectionEnd = s + text.length;
+  }
+  function renderInlineGallery(){
+    const g = document.getElementById('inlineGallery');
+    g.innerHTML = inlineImages.map((im,i) => `
+      <div class="img-thumb">
+        <img src="${im.data}" alt="">
+        <span class="lbl">${im.token}</span>
+        <button type="button" class="del" data-i="${i}" title="移除">×</button>
+      </div>`).join('');
+    g.querySelectorAll('.del').forEach(b => b.addEventListener('click', () => {
+      const idx = +b.dataset.i, tok = inlineImages[idx].token;
+      inlineImages.splice(idx,1);
+      const ta = document.getElementById('f-content');
+      ta.value = ta.value.split('[[' + tok + ']]').join('');
+      renderInlineGallery();
+    }));
+  }
+
   async function saveArticle() {
     const title   = document.getElementById('f-title').value.trim();
     const cat     = document.getElementById('f-cat').value;
@@ -421,7 +529,12 @@
     }
 
     const dateTs = Timestamp.fromDate(new Date(dateVal));
-    const data   = { title, category: cat, date: dateTs, summary, content, published: pub, updatedAt: Timestamp.now() };
+    let imgBytes = (coverData ? coverData.length : 0);
+    inlineImages.forEach(im => imgBytes += im.data.length);
+    if (imgBytes > 950000) {
+      showToast('圖片總量過大，請減少圖片數量或使用較小的圖片', 'error'); return;
+    }
+    const data   = { title, category: cat, date: dateTs, summary, content, published: pub, cover: coverData || '', images: inlineImages, updatedAt: Timestamp.now() };
 
     try {
       if (isNew) {
