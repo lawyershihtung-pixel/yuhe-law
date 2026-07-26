@@ -26,6 +26,13 @@ service cloud.firestore {
       allow write: if request.auth != null;
     }
 
+    // 前台法律知識:規則與 news 相同(已發布公開、草稿僅管理員、僅管理員可寫)
+    match /knowledge/{docId} {
+      allow read:  if resource.data.published == true;
+      allow read:  if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
     // 預設拒絕其餘所有存取
     match /{document=**} {
       allow read, write: if false;
