@@ -13,10 +13,10 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{
-      --ink:#1c1c1e;--slate:#3a3a4a;--mid:#6b6b7b;
-      --mist:#f5f4f0;--cream:#faf9f6;
-      --gold:#b89d6e;--gold-lt:#d4bc92;--white:#ffffff;
-      --border:rgba(184,157,110,0.25);
+      --ink:#0f1e33;--slate:#274063;--mid:#6b6b7b;
+      --mist:#eef6fd;--cream:#ffffff;
+      --gold:#1f8fe0;--gold-lt:#7ec8f0;--white:#ffffff;
+      --border:rgba(31,143,224,0.25);
       --red:#c0392b;--green:#27ae60;
     }
     body{font-family:'Noto Sans TC',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
@@ -40,7 +40,7 @@
     .admin-nav-logo{font-family:'Noto Serif TC',serif;font-size:1rem;letter-spacing:.12em;color:var(--white);}
     .admin-nav-logo span{color:var(--gold);}
     .admin-nav-right{display:flex;align-items:center;gap:1rem;}
-    .admin-badge{font-size:0.75rem;letter-spacing:.1em;color:var(--gold-lt);background:rgba(184,157,110,.12);padding:.3rem .8rem;border:1px solid rgba(184,157,110,.2);}
+    .admin-badge{font-size:0.75rem;letter-spacing:.1em;color:var(--gold-lt);background:rgba(31,143,224,.12);padding:.3rem .8rem;border:1px solid rgba(31,143,224,.2);}
     .logout-btn{font-size:0.78rem;letter-spacing:.1em;color:rgba(255,255,255,.5);background:none;border:none;cursor:pointer;transition:color .2s;}
     .logout-btn:hover{color:var(--gold);}
 
@@ -55,7 +55,7 @@
     .article-list{display:flex;flex-direction:column;gap:.5rem;overflow-y:auto;flex:1;}
     .article-item{padding:.9rem 1rem;border:1px solid var(--border);cursor:pointer;background:var(--cream);transition:background .2s,border-color .2s;position:relative;}
     .article-item:hover{background:var(--mist);}
-    .article-item.active{border-color:var(--gold);background:rgba(184,157,110,.07);}
+    .article-item.active{border-color:var(--gold);background:rgba(31,143,224,.07);}
     .article-item.unpublished{opacity:.55;}
     .ai-title{font-family:'Noto Serif TC',serif;font-size:0.9rem;font-weight:500;color:var(--ink);margin-bottom:.25rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:1.5rem;}
     .ai-meta{font-size:0.75rem;color:var(--mid);display:flex;align-items:center;gap:.6rem;}
@@ -121,6 +121,12 @@
     .img-thumb img{ width:92px; height:92px; object-fit:cover; border-radius:8px; border:1px solid var(--border); display:block; }
     .img-thumb .lbl{ position:absolute; left:4px; top:4px; background:rgba(0,0,0,.6); color:#fff; font-size:.68rem; padding:1px 6px; border-radius:4px; }
     .img-thumb .del{ position:absolute; right:2px; top:2px; width:20px; height:20px; border-radius:50%; background:#c0392b; color:#fff; border:none; cursor:pointer; font-size:.85rem; line-height:1; }
+</style>
+<style>
+/* 後台天空風漸層(同步主站) */
+#login-screen{ background:linear-gradient(150deg,#0f1e33 0%, #1b3a63 60%, #2a6bb0 100%) !important; }
+.admin-nav{ background:linear-gradient(90deg,#0f1e33,#1b3a63) !important; }
+.login-btn,.btn-save{ background:linear-gradient(90deg,#2b8fe0,#5cc0ea) !important; }
 </style>
 </head>
 <body>
