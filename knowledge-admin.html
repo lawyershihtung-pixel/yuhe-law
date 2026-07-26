@@ -128,6 +128,16 @@
 .admin-nav{ background:linear-gradient(90deg,#0f1e33,#1b3a63) !important; }
 .login-btn,.btn-save{ background:linear-gradient(90deg,#2b8fe0,#5cc0ea) !important; }
 </style>
+<style>
+/* 置頂與排序 */
+.article-item{ display:flex; align-items:center; gap:.5rem; }
+.ai-body{ flex:1; min-width:0; }
+.ai-move{ display:flex; flex-direction:column; gap:2px; flex-shrink:0; }
+.ai-move button{ width:24px; height:19px; border:1px solid var(--border); background:var(--white); color:var(--gold); border-radius:4px; cursor:pointer; font-size:.6rem; line-height:1; padding:0; display:flex; align-items:center; justify-content:center; }
+.ai-move button:disabled{ opacity:.3; cursor:default; }
+.ai-move button:hover:not(:disabled){ background:var(--gold); color:#fff; }
+.ai-pin{ background:var(--gold); color:#fff; font-size:.65rem; padding:1px 6px; border-radius:4px; margin-right:.3rem; }
+</style>
 </head>
 <body>
 
@@ -213,6 +223,17 @@
               </label>
               <span class="toggle-label" id="pubLabel">立即發布</span>
             </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>置頂文章</label>
+          <div class="toggle-wrap" style="padding:.6rem 0;">
+            <label class="toggle">
+              <input type="checkbox" id="f-pinned">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">釘選至列表最前</span>
           </div>
         </div>
 
@@ -370,32 +391,73 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  function tsMillis(ts){
+    if (!ts) return 0;
+    if (typeof ts.toMillis === 'function') return ts.toMillis();
+    if (typeof ts.seconds === 'number') return ts.seconds * 1000;
+    return new Date(ts).getTime() || 0;
+  }
+  function orderVal(a){ return a.order != null ? a.order : tsMillis(a.date); }
+  function sortedArticles(){
+    return articles.slice().sort((x,y) => {
+      if (!!y.pinned !== !!x.pinned) return (y.pinned?1:0) - (x.pinned?1:0);
+      return orderVal(y) - orderVal(x);
+    });
+  }
   function renderList() {
     const list = document.getElementById('articleList');
     if (!articles.length) {
       list.innerHTML = '<div style="font-size:.83rem;color:var(--mid);text-align:center;padding:2rem 0;">尚無文章</div>';
       return;
     }
-    list.innerHTML = articles.map(a => `
+    const arr = sortedArticles();
+    list.innerHTML = arr.map((a,i) => `
       <div class="article-item ${a.published ? '' : 'unpublished'} ${a.id === currentId ? 'active' : ''}" data-id="${a.id}">
-        <div class="ai-title">${escapeHtml(a.title)}</div>
-        <div class="ai-meta">
-          <span class="ai-cat">${escapeHtml(a.category || '未分類')}</span>
-          <span class="ai-status ${a.published ? 'pub' : 'draft'}">${a.published ? '已發布' : '草稿'}</span>
-          <span>${formatDateDisplay(a.date)}</span>
+        <div class="ai-move">
+          <button class="ai-up" data-id="${a.id}" title="上移" ${i===0?'disabled':''}>▲</button>
+          <button class="ai-down" data-id="${a.id}" title="下移" ${i===arr.length-1?'disabled':''}>▼</button>
+        </div>
+        <div class="ai-body">
+          <div class="ai-title">${a.pinned ? '<span class="ai-pin">置頂</span>' : ''}${escapeHtml(a.title)}</div>
+          <div class="ai-meta">
+            <span class="ai-cat">${escapeHtml(a.category || '未分類')}</span>
+            <span class="ai-status ${a.published ? 'pub' : 'draft'}">${a.published ? '已發布' : '草稿'}</span>
+            <span>${formatDateDisplay(a.date)}</span>
+          </div>
         </div>
         <button class="ai-del" data-id="${a.id}" title="刪除">✕</button>
       </div>`).join('');
 
     list.querySelectorAll('.article-item').forEach(el => {
       el.addEventListener('click', e => {
-        if (e.target.classList.contains('ai-del')) return;
+        if (e.target.closest('.ai-del') || e.target.closest('.ai-move')) return;
         loadEditor(el.dataset.id);
       });
     });
     list.querySelectorAll('.ai-del').forEach(btn => {
       btn.addEventListener('click', e => { e.stopPropagation(); confirmDelete(btn.dataset.id); });
     });
+    list.querySelectorAll('.ai-up').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); moveArticle(btn.dataset.id, 'up'); });
+    });
+    list.querySelectorAll('.ai-down').forEach(btn => {
+      btn.addEventListener('click', e => { e.stopPropagation(); moveArticle(btn.dataset.id, 'down'); });
+    });
+  }
+
+  async function moveArticle(id, dir){
+    const arr = sortedArticles();
+    const idx = arr.findIndex(a => a.id === id);
+    const j = dir === 'up' ? idx - 1 : idx + 1;
+    if (j < 0 || j >= arr.length) return;
+    const a = arr[idx], b = arr[j];
+    if (!!a.pinned !== !!b.pinned) return;
+    const oa = orderVal(a), ob = orderVal(b);
+    try {
+      await updateDoc(doc(db, 'knowledge', a.id), { order: ob });
+      await updateDoc(doc(db, 'knowledge', b.id), { order: oa });
+      await loadArticles();
+    } catch(e){ showToast('排序失敗：' + e.message, 'error'); }
   }
 
   // ── 編輯器 ──
@@ -409,6 +471,7 @@
     document.getElementById('f-content').value = '';
     document.getElementById('f-published').checked = true;
     coverData=''; inlineImages=[]; renderCover(); renderInlineGallery();
+    document.getElementById('f-pinned').checked = false;
     updatePubLabel();
     document.getElementById('editorHeading').textContent = '新增文章';
     document.getElementById('deleteBtn').style.display   = 'none';
@@ -430,6 +493,7 @@
     inlineImages = Array.isArray(art.images) ? art.images.slice() : [];
     renderCover(); renderInlineGallery();
     document.getElementById('f-published').checked = !!art.published;
+    document.getElementById('f-pinned').checked = !!art.pinned;
     updatePubLabel();
     document.getElementById('editorHeading').textContent = '編輯文章';
     document.getElementById('deleteBtn').style.display   = 'inline-block';
@@ -529,6 +593,7 @@
     const summary = document.getElementById('f-summary').value.trim();
     const content = document.getElementById('f-content').value.trim();
     const pub     = document.getElementById('f-published').checked;
+    const pinned  = document.getElementById('f-pinned').checked;
 
     if (!title || !cat || !dateVal || !content) {
       showToast('請填寫標題、分類、日期及內容', 'error'); return;
@@ -540,11 +605,12 @@
     if (imgBytes > 950000) {
       showToast('圖片總量過大，請減少圖片數量或使用較小的圖片', 'error'); return;
     }
-    const data   = { title, category: cat, date: dateTs, summary, content, published: pub, cover: coverData || '', images: inlineImages, updatedAt: Timestamp.now() };
+    const data   = { title, category: cat, date: dateTs, summary, content, published: pub, pinned, cover: coverData || '', images: inlineImages, updatedAt: Timestamp.now() };
 
     try {
       if (isNew) {
         data.createdAt = Timestamp.now();
+        data.order = Date.now();
         const ref = await addDoc(collection(db, 'knowledge'), data);
         currentId = ref.id; isNew = false;
         showToast('文章已新增！', 'success');

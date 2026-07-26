@@ -211,6 +211,7 @@ body{ font-family:'Noto Sans TC',sans-serif; }
 .article-cover{ width:100%; border-radius:12px; margin:0 0 1.4rem; display:block; }
 .article-img{ max-width:100%; height:auto; border-radius:10px; margin:1.1rem auto; display:block; }
 .card-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; display:block; margin-bottom:1rem; }
+.card-pin{ display:inline-block; background:var(--gold); color:#fff; font-size:.7rem; padding:1px 9px; border-radius:999px; margin-right:.45rem; vertical-align:middle; font-weight:600; }
 </style>
 </head>
 <body>
@@ -368,7 +369,12 @@ body{ font-family:'Noto Sans TC',sans-serif; }
       const snap = await getDocs(q);
       allArticles = snap.docs
         .map(d => ({ id: d.id, ...d.data() }))
-        .sort((a, b) => tsMillis(b.date) - tsMillis(a.date));
+        .sort((a, b) => {
+          if (!!b.pinned !== !!a.pinned) return (b.pinned?1:0) - (a.pinned?1:0);
+          const oa = a.order != null ? a.order : tsMillis(a.date);
+          const ob = b.order != null ? b.order : tsMillis(b.date);
+          return ob - oa;
+        });
       renderNews(allArticles);
     } catch (e) {
       console.error('讀取新聞失敗：', e);
@@ -403,7 +409,7 @@ body{ font-family:'Noto Sans TC',sans-serif; }
           <span class="card-cat">${escapeHtml(a.category || '公告')}</span>
           <span class="card-date">${formatDate(a.date)}</span>
         </div>
-        <div class="card-title">${escapeHtml(a.title)}</div>
+        <div class="card-title">${a.pinned ? '<span class="card-pin">置頂</span>' : ''}${escapeHtml(a.title)}</div>
         <div class="card-summary">${escapeHtml(a.summary || '')}</div>
         <div class="card-more">閱讀全文 →</div>
       </div>`).join('');
