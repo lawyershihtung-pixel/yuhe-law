@@ -217,6 +217,14 @@ body{ font-family:'Noto Sans TC',sans-serif; }
 .modal-share{ display:inline-flex; align-items:center; gap:.4rem; margin-top:.6rem; padding:.4rem .9rem; font-size:.82rem; border:1px solid var(--gold); color:var(--gold); background:none; border-radius:999px; cursor:pointer; letter-spacing:.03em; }
 .modal-share:hover{ background:var(--gold); color:#fff; }
 </style>
+<style>
+/* 文章搜尋框 */
+.search-bar{ max-width:560px; margin:0 auto 1.6rem; padding:0 5vw; }
+.search-box{ position:relative; }
+.search-box .search-icon{ position:absolute; left:1.1rem; top:50%; transform:translateY(-50%); font-size:.95rem; opacity:.55; pointer-events:none; }
+.search-box input{ width:100%; padding:.8rem 1.2rem .8rem 2.7rem; border:1px solid var(--border); border-radius:999px; font-size:1rem; font-family:inherit; color:var(--ink); background:var(--white); outline:none; transition:border-color .2s, box-shadow .2s; }
+.search-box input:focus{ border-color:var(--gold); box-shadow:0 0 0 3px rgba(31,143,224,.12); }
+</style>
 </head>
 <body>
 
@@ -285,6 +293,14 @@ body{ font-family:'Noto Sans TC',sans-serif; }
   <button class="filter-btn" data-cat="刑事法律">刑事法律</button>
   <button class="filter-btn" data-cat="不動產法律">不動產法律</button>
   <button class="filter-btn" data-cat="行政法律">行政法律</button>
+</div>
+
+<!-- SEARCH BAR -->
+<div class="search-bar reveal">
+  <div class="search-box">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="searchInput" placeholder="搜尋文章關鍵字…" autocomplete="off" aria-label="搜尋文章">
+  </div>
 </div>
 
 <!-- NEWS SECTION -->
@@ -492,16 +508,34 @@ body{ font-family:'Noto Sans TC',sans-serif; }
   });
 
   // ── Filter ──
+  let currentSearch = '';
+  function applyFilters() {
+    const kw = currentSearch.trim().toLowerCase();
+    let list = currentCat === '全部' ? allArticles : allArticles.filter(a => a.category === currentCat);
+    if (kw) {
+      list = list.filter(a => (
+        (a.title || '') + ' ' + (a.summary || '') + ' ' + (a.content || '') + ' ' + (a.category || '')
+      ).toLowerCase().includes(kw));
+    }
+    if (!list.length && (kw || currentCat !== '全部')) {
+      document.getElementById('news-container').innerHTML =
+        '<div class="state-box"><p>找不到符合的文章，請換個關鍵字或分類。</p></div>';
+      return;
+    }
+    renderNews(list);
+  }
   document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentCat = btn.dataset.cat;
-      const filtered = currentCat === '全部'
-        ? allArticles
-        : allArticles.filter(a => a.category === currentCat);
-      renderNews(filtered);
+      applyFilters();
     });
+  });
+  const searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.addEventListener('input', () => {
+    currentSearch = searchInput.value;
+    applyFilters();
   });
 
   loadNews();
